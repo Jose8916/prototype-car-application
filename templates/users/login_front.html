@@ -1,0 +1,121 @@
+{% extends 'general/base_login.html' %}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'apps/users/login_front.js' %}"></script>
+{% endblock%}
+{% block container %}
+<div class="container-fluid mb-auto">
+	<div class="row mt-4 text-center">
+		<div class="col-10 offset-1 col-md-2 offset-md-5">
+			<img src="{% static 'image/ado_logo_s.png' %}" class="img-fluid">
+		</div>
+	</div>
+	<!-- <div class="row text-center mt-2">	
+		<div class="col-3">
+				Afiliado
+		</div>
+		<div class="col-3 border-left border-secondary">Aliado</div>
+		<div class="col-3 border-left border-secondary">Asociado</div>
+		<div class="col-3 border-left border-secondary">PLus</div>
+	</div> -->
+	<div class="row my-4">
+		<div class="col-10 offset-1 col-md-4 offset-md-4">
+			<!-- <div class="row d-flex justify-content-center">
+				¿Aún no has solicitado tu membresia?
+			</div> -->
+			<div class="row">
+				<div class="col">
+					<a href="{% url 'users:registration' %}" class="btn border-Csecondary form-control rounded-pill" role="button" aria-pressed="true">Suscríbete</a>
+				</div>
+			</div>
+			<div class="row mt-4">
+				<div class="col-4 offset-4">
+					<img src="{% static 'image/membresia_icon.png' %}" class="img-fluid">
+				</div>	
+			</div>
+		</div>
+	</div>
+	<div class="row my-4 text-center">
+		<div class="col font-weight-bold">
+			Iniciar sesión
+		</div>
+	</div>
+	{% for err in form.non_field_errors %}
+	<div class="col-10 offset-1">
+		<div class="alert alert-danger alert-dismissible fade show">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{{err}}
+		</div>
+	</div>
+	{% endfor %}
+	{% if success%}
+	<div class="col-10 offset-1">
+		<div class="alert alert-success alert-dismissible fade show">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+				{{success}}
+		</div>
+	</div>
+	{% endif %}
+	{% if messages %}
+		{% for message in messages %}
+			<div class="col-10 offset-1">
+				<div class="alert alert-success alert-dismissible fade show">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+						{{message}}
+				</div>
+			</div>
+		{% endfor %}
+	{% endif %}
+	<form method="POST" class="row mb-4">
+		{% csrf_token %}
+		<div class="col-10 offset-1 col-md-4 offset-md-4">
+			<div class="form-group text-center">
+			    <label for="username">Ingresa tu correo</label>
+			    <input type="text" id="username" name="username" class="form-control rounded-pill" placeholder="">
+			    <div class="help-block with-errors text-danger">{{form.errors.username}}</div>
+			</div>
+			<div class="form-group text-center">
+			    <label for="password">Ingresa tu contraseña</label>
+			    <input type="password" id="password" name="password" class="form-control rounded-pill" placeholder="">
+			    <div class="help-block with-errors text-danger">{{form.errors.password}}</div>
+			</div>
+			<div class="form-group form-check text-center mb-4">
+			    <input type="checkbox" class="form-check-input" id="show_password">
+			    <label class="form-check-label" for="show_password">Mostrar contraseña</label>
+			</div>
+		</div>
+		<div class="col-6 offset-3 col-md-2 offset-md-5">
+			<div class="form-group mt-4 text-center">
+				<button type="submit" class="btn bg-Csecondary form-control rounded-pill text-Cprimary">Entrar</button>
+			</div>
+			<div class="text-center">
+				<a href="{% url 'users:password_recovery' %}" class="text-dark" role="button" aria-pressed="true">¿Olvidaste la contraseña?</a>
+			</div>
+		</div>
+		
+	</form>
+	
+</div>
+<div class="container-fluid bg-Csecondary align-self-end">
+	<div class="row">
+		<div class="col">
+			<div class="row mt-3">
+				<div class="col-2 offset-5">
+					<img src="{% static 'image/ado_iso.png' %}" class="img-fluid">
+				</div>
+			</div>
+			<div class="row text-center">
+				<div class="col-12 text-white">
+					Políticas de privacidad<br>
+					Terminos y condiciones
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col px-0">
+					<img src="{% static 'image/footer.png' %}" class="img-fluid">
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+{% endblock%}

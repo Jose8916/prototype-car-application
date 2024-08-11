@@ -1,0 +1,87 @@
+{% extends 'general/base.html' %}
+{% load humanize %}
+{% block menu %}{% include "general/guest_menu.html" %}{% endblock%}
+{% load static %}
+{% block script %}
+{% endblock %}
+{% block container %}
+<form id="form_search" class="row mt-2" method="get">
+	<div class="col-6">
+        <div class="form-group">
+            {{ form_busqueda.codigo_invitacion }}
+        </div>
+		<div class="help-block with-errors text-danger" required>{{form_busqueda.codigo_invitacion.errors}}</div>
+    </div>
+	<div class="col-6">
+		<button type="submit" form="form_search" name="action" value="create" class="btn btn-sm btn-block btn-primary"><i class="fa fa-search"></i> Buscar</button>
+    </div>
+</form>
+
+{% if movements %}
+	<div class="row table-responsive" style="height: 500px;">
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th class="min-80"  scope="col">Fecha</th>
+					<th class="min-100 text-left" scope="col">Tipo de movimiento</th>
+					<th class="min-80 text-right"  scope="col">Valor</th>
+					<th class="min-100 text-left" scope="col">Origen / Destino</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for movement in movements %}
+				<tr>
+					<td scope="row">{{movement.create_date|date:"Y-m-d H:i:s"}}</td>
+					<td scope="row" class="text-left">{{movement.type_movement}}</td>
+					{% if  movement.amount < 0 %}
+						<td scope="row" class="text-right text-danger">${{movement.amount|intcomma}}</td>
+					{% else %}
+						<td scope="row" class="text-right">${{movement.amount|intcomma}}</td>
+					{% endif %}
+					{% if movement.type_movement.id == 2 %}
+						<td scope="row" class="text-left">Destino: {{movement.code_invitation_transfer_user}}</td>
+					{% elif  movement.type_movement.id == 3 %}					
+						<td scope="row" class="text-left">Origen: {{movement.code_invitation_origin_user}}</td>
+					{% else %}
+						<td scope="row" class="text-left"></td>
+					{% endif %}
+				</tr>		
+				{% endfor %}
+			</tbody>
+			<thead>
+				<tr>
+					<th colspan="3" class="text-right">Total</th>
+					<th class="text-right">$ {{total_movements|intcomma}}</th>
+				</tr>
+			</thead>	
+		</table>
+	</div>
+	<div class="row">
+		<div class="col-12">
+		<nav>
+			<ul class="pagination justify-content-center">
+			{% if movements.has_previous %}
+			<li class="page-item"><a  class="page-link" href="?codigo_invitacion={{codigo_invitacion}}&page=1"><i class="fa fa-fast-backward"></i></a></li>
+			{% endif %}
+			{% if movements.has_previous %}
+			<li class="page-item"><a  class="page-link" href="?codigo_invitacion={{codigo_invitacion}}&page={{ movements.previous_page_number }}"><i class="fa fa-step-backward"></i></a></li>
+			{% endif %}
+			{% for i in movements.paginator.page_range %}
+				{% if movements.number == i %}
+				<li class="page-item active"><a  class="page-link" href="" disabled>{{ i }}</a></li>
+				{% else %}
+				<li class="page-item"><a  class="page-link" href="?codigo_invitacion={{codigo_invitacion}}&page={{ i }}" >{{ i }}</a></li>
+				{% endif %}
+			{% endfor %}
+			{% if movements.has_next%}
+			<li class="page-item"><a  class="page-link" href="?codigo_invitacion={{codigo_invitacion}}&page={{ movements.next_page_number }}"><i class="fa fa-step-forward"></i></a></li>
+			{% endif %}
+			{% if movements.has_next %}
+			<li class="page-item"><a  class="page-link" href="?codigo_invitacion={{codigo_invitacion}}&page={{ movements.paginator.num_pages }}"><i class="fa fa-fast-forward"></i></a></li>
+			{% endif %}
+			</ul>
+		</nav>
+		</div>
+	</div>
+{% endif %}
+  {% endblock %}

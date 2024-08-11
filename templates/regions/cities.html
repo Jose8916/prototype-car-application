@@ -1,0 +1,103 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/taxe_menu.html" %}{% endblock%}
+{% block form_modal_title %}Crear Pais{% endblock %}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+</script>
+{% endblock %}
+{% block container %}
+	<div class="row mt-2 d-flex justify-content-end">
+		<a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+	</div>
+	<div class="row mx-0 table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Ciudad</th>
+					<th scope="col">Código</th>
+					<th scope="col">Departamento</th>
+					<th scope="col">Estado</th>
+					<th scope="col">Opciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for city in cities %}
+				<tr>
+					<th scope="row">{{ city.name }}</th>
+					<th scope="row">{{ city.cod }}</th>
+					<td>{{ city.department.name }}</td>
+					<td>{{ city.state.name }}</td>
+					<td>
+						<a class="fa fa-pencil-square-o text-Cprimary ml-2 cursor-pointer" href="{% url 'regions:cities' city.id %}"></a>
+					</td>
+				</tr>		
+				{% endfor %}
+			</tbody>	
+		</table>
+	</div>
+{% endblock %}
+{% block modal_title %}{% if city %}Editar {% else %}Crear{% endif %} ciudad{% endblock%}
+{% block modal_body %}
+<form  method="POST" class="form-row form-signin m-2" id="createform">
+	{% csrf_token %}
+	<div class="form-group col-6 text-center">
+		<label for="department">
+			Departamento:
+    	</label>
+    	<select class="form-control {% if form.department.errors %}}border-bottom border-danger{% endif %}" name="department" id="department">
+    		<option>Seleccione...</option>
+    		{% for x in departments %}
+    		<option value="{{x.id}}" {% if form.errors and form.department.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == city.department.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+    		{% endfor %}
+    	</select>
+    	<div class="help-block with-errors text-danger">{{form.department.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label for="name">
+			Nombre:
+    	</label>
+    	<input type="text" class="form-control {% if form.name.errors %}}border-bottom border-danger{% endif %}" name="name" id="name" placeholder="" value="{% if form.errors %}{{form.name.value}}{% else %}{{city.name}}{% endif %}">
+    	<div class="help-block with-errors text-danger">{{form.name.errors}}</div>
+	</div>
+	{% if not city %}
+		<div class="form-group col-6 text-center">
+			<label for="cod">
+				Código de la ciudad:
+			</label>
+			<input type="text" class="form-control {% if form.cod.errors %}}border-bottom border-danger{% endif %}" name="cod" id="cod" placeholder="" value="{% if form.errors %}{{form.cod.value}}{% else %}{{city.cod}}{% endif %}">
+			<div class="help-block with-errors text-danger">{{form.cod.errors}}</div>
+		</div>
+	{% endif %}
+	<div class="form-group col-6 text-center">
+		<label for="state">
+			Estado:
+    	</label>
+    	<select class="form-control {% if form.state.errors %}}border-bottom border-danger{% endif %}" name="state" id="state">
+    		<option>Seleccione...</option>
+    		{% for x in states %}
+    		<option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == city.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+    		{% endfor %}
+    	</select>
+    	<div class="help-block with-errors text-danger">{{form.state.errors}}</div>
+	</div>
+	{% for err in form.non_field_errors %}
+	<div class="col-10 offset-1">
+		<div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+	</div>
+    {% endfor %}
+</form>
+{% endblock%}
+{% block modal_footer %}
+<div class="col-6">
+	<button type="button" class="btn btn-sm btn-block btn-secondary" data-dismiss="modal">Cerrar</button>
+</div>
+<div class="col-6">
+	<button type="submit" form="createform" class="btn btn-sm btn-block btn-primary">
+		{% if city %}Editar{% else %}Crear{% endif %}
+	</button>	
+</div>
+{% endblock%}

@@ -1,0 +1,282 @@
+{% extends "general/base.html" %}
+{% block menu %}{% include "general/service_menu.html" %}{% endblock%}
+{% load humanize %}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+  window.location.replace("/service");
+});
+</script> 
+{% endblock %}
+{% block container %}
+<form id="form_search" class="row mt-2" method="get">
+  <div class="col-4">
+    <div class="form-group">
+      <input type="text" class="form-control" type="text" name="bar_search" value="" placeholder="cod. invitación, teléfono, cedula">
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="form-group">
+      <select class="form-control" id="filter_state" name="filter_state">
+        <option value="">Estados(opcional)</option>
+        {% for x in states_service %}
+          <option value="{{x.id}}">{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="form-group">
+      <select class="form-control" id="city_search" name="city_search">
+        <option value="">Ciudad(opcional)</option>
+        {% for x in cities %}
+          <option value="{{x.id}}">{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="col-2">
+    <a href="#"><button type="submit"  class="btn bg-primary btn-block text-truncate text-white"><i class="fa fa-search"></i> Buscar</button></a>
+  </div>
+</form>
+{% if request.user.groups.all.0.id == 2 %}
+<div class="row mt-2 d-flex justify-content-end">
+  <a class="h6 text-success font-weight-bold" href="{% url 'services:service_begin' %}"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+</div>
+{% endif %}
+<div class="row table-responsive" style="height: 100%;">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th class="min-80" scope="col">N sevicio contrato</th>
+        <th class="min-80" scope="col">PQR solicitado</th>
+        <th class="min-80" scope="col">Estado</th>
+        <th class="min-80" scope="col">Fecha finalizado</th>
+        <th class="min-80" scope="col">Ciudad y dirección de destino</th>
+        <th class="min-80" scope="col">Nombre dirección</th>
+        <th class="min-80" scope="col">Tarjeta y categoria</th>
+        <th class="min-80" scope="col">Información pasajero</th>
+        <th class="min-80" scope="col">llamado al Usuario</th>
+        <th class="min-80" scope="col">Información conductor</th>
+        <th class="min-80" scope="col">Llamado al conductor</th>
+        <th class="min-80" scope="col">Nombre usuario contáctado</th>
+        <th class="min-80" scope="col">Usuario ubicado</th>
+        <th class="min-80" scope="col">Servicio calificado</th>
+        <th class="min-80" scope="col">Placa</th>
+        <th class="min-80" scope="col">Servicio tarificado</th>
+        <th class="min-80" scope="col">Precio sugerido</th>
+        <th class="min-80" scope="col">Metodo de pago</th>
+        <th class="min-80" scope="col">Código servicio creado</th>
+        <th class="min-80" scope="col">N código de servicio</th>
+        <th class="min-80" scope="col">Beneficiado por categoria</th>
+        <th class="min-80" scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x  in services %}
+      <tr>
+        <th scope="row">{{x.id}}</th>
+        <td>{{x.pqr_records.0.type_pqr.name}}</td>
+        <td>{{x.state.name }}</td>
+        <td>{{x.time_stop |date:"Y-m-d H:i:s"}}</td>
+        <td>{{x.location.city.name}} / {{x.location.address}} </td>
+        <td>{{x.location.name}}</td>
+        <td>{{x.user_receiving.get_group_name}}/{{x.user_receiving.category.name}}</td>
+        <td>
+          <button class="btn btn-sm btn-info" onclick="sw_mensaje('<b>Nombre:</b> {{x.user_receiving.user.get_full_name}}<br><b>Telefono 1:</b> {{x.user_receiving.cell_phone}}<br><b>Telefono 2:</b> {{x.user_receiving.phone_secondary}}<br><b>Codigo:</b> {{x.cod_receiving}}{% if request.user.groups.all.0.id == 4 %}<br><b>Documento:</b> {{x.user_receiving.document_number}}{% endif %}','Información pasajero')" ><i class="fa fa-info-circle"></i></button>   
+        </td>
+        <td>PENDIENTE</td>
+        <td>
+          <button class="btn btn-sm btn-info" onclick="sw_mensaje('<b>Nombre:</b> {{x.user_providing.user.get_full_name}}<br> <b>Telefono 1:</b> {{x.user_providing.cell_phone}}<br> <b>Telefono 2:</b> {{x.user_providing.phone_secondary}}<br> <b>Codigo:</b> {{x.cod_providing}} {% if request.user.groups.all.0.id == 4 %}<br> <b>Documento:</b> {{x.user_providing.document_number}} {% endif %}','Información conductor')"> <i class="fa fa-info-circle"></i> </button> 
+        </td>
+        <td>PENDIENTE</td>
+        <td>{{x.pqr_records.0.user_question.user.get_full_name}}</td>
+        <td>{{x.flag_call |default_if_none:0|intcomma}}</td>
+        <td>{{x.score |default_if_none:0|intcomma}}</td>
+        <td>{{x.vehicle.plate}}</td>
+        <td>${{x.price|default_if_none:0|intcomma}}</td>
+        <td>${{x.total|default_if_none:0|intcomma}}</td>
+        <td>{{x.payment_method.name}}</td>
+        <td>{{x.creation_date |date:"Y-m-d H:i:s"}}</td>
+        <td>{{x.code}}</td>
+        <td>-{{x.user_receiving.category.discount}}%</td>
+        <td class="px-2 py-3" scope="col">
+            <a class="fa fa-pencil-square-o cursor-pointer" href="{% url 'services:service' x.id %}"></a>
+        </td>
+
+
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>  
+</div>
+<div class="row">
+  <div class="col-12">
+    <nav>
+      <ul class="pagination justify-content-center">
+        {% if services.has_previous %}
+        <li class="page-item"><a  class="page-link" href="?page=1"><i class="fa fa-fast-backward"></i></a></li>
+        {% endif %}
+        {% if services.has_previous %}
+        <li class="page-item"><a  class="page-link" href="?page={{ services.previous_page_number }}"><i class="fa fa-step-backward"></i></a></li>
+        {% endif %}
+        {% for i in services.paginator.page_range %}
+          {% if services.number == i %}
+          <li class="page-item active"><a  class="page-link" href="" disabled>{{ i }}</a></li>
+          {% else %}
+          <li class="page-item"><a  class="page-link" href="?page={{ i }}" >{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if services.has_next%}
+        <li class="page-item"><a  class="page-link" href="?page={{ services.next_page_number }}"><i class="fa fa-step-forward"></i></a></li>
+        {% endif %}
+        {% if services.has_next %}
+        <li class="page-item"><a  class="page-link" href="?page={{ services.paginator.num_pages }}"><i class="fa fa-fast-forward"></i></a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+{% block modal_title %}Crear {{name}}{% endblock%}
+{% block modal_body %}
+<form  method="POST" class="form-signin m-2" id="createform">
+  {% csrf_token %}
+  {% if not pqr %}
+  <div class="form-group row">
+    <label for="user_question" class="col-3 col-form-label text-right">
+      A quien contactamos:
+    </label>
+    <div class="col-9">
+      <select class="form-control {% if form.user_question.errors %}border-bottom border-danger{% endif %}" id="user_question" name="user_question">
+        <option>Selecciona una opción</option>
+        {% if service.user_receiving.user.get_full_name %}
+        <option value="{{service.user_receiving.user.id}}" {% if form.errors or form_service.errors %}{% if form.user_question.value|floatformat:'0' == service.user_receiving.user.id|floatformat:'0' %} selected {% endif %}{% endif %}>{{service.user_receiving.user.get_full_name}}(pasajero)</option>
+        {% endif %}
+        {% if service.user_providing.user.get_full_name %}
+        <option value="{{service.user_providing.user.id}}" {% if form.errors or form_service.errors %}{% if form.user_question.value|floatformat:'0' == service.user_providing.user.id|floatformat:'0' %} selected {% endif %}{% endif %}>{{service.user_providing.user.get_full_name}}(conductor)</option>
+        {% endif %}
+      </select>
+    </div>
+    {{form.user_question.errors}}
+  </div>
+  <div class="form-group row">
+    <label for="flag_call" class="col-3 col-form-label text-right">
+      Contesto:
+    </label>
+    <div class="col-9">
+      <select class="form-control {% if form_service.flag_call.errors %}border-bottom border-danger{% endif %}" id="flag_call" name="flag_call">
+        <option value="">Selecciona una opción</option>
+        <option value="SI" {% if form.errors or form_service.errors %}{% if form_service.flag_call.value == 'SI' %} selected {% endif %}{% endif %}>SI</option>
+        <option value="NO" {% if form.errors or form_service.errors %}{% if form_service.flag_call.value == 'NO' %} selected {% endif %}{% endif %}>NO</option>
+      </select>
+    </div>
+    {{form_service.flag_call.errors}}
+  </div>
+  <div class="form-group row">
+    <label for="type_pqr" class="col-3 col-form-label text-right">
+      Tipo de pqr:
+    </label>
+    <div class="col-9">
+      <select class="form-control {% if form.type_pqr.errors %}border-bottom border-danger{% endif %}" id="type_pqr" name="type_pqr">
+        <option>Selecciona una opción</option>
+        {% for x in type_pqrs %}
+          <option value="{{x.id}}" {% if form.errors or form_service.errors %}{% if form.type_pqr.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}{% endif %}>{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {{form.type_pqr.errors}}
+  </div>
+  {% else %}
+  <div class="row mb-3">
+    <div class="col-8">
+      <div class="row m-0">
+        <div class="col-6 font-weight-bold">
+          A quien contactamos:
+        </div>
+        <div class="col-6">
+          {{pqr.user_question.user.get_full_name}}
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="row m-0">
+        <div class="col-6 font-weight-bold">
+          Contesto:
+        </div>
+        <div class="col-6">
+          {{service.flag_call}}
+        </div>
+      </div>
+    </div>
+    <div class="col-8">
+      <div class="row m-0">
+        <div class="col-6 font-weight-bold">
+          Tipo PQR:
+        </div>
+        <div class="col-6">
+          {{pqr.type_pqr.name}}
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="row m-0">
+        <div class="col-6 font-weight-bold">
+          Calificación:
+        </div>
+        <div class="col-6">
+          {{service.score}}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  <div class="form-group row">
+    <label for="discount" class="col-3 col-form-label text-right">
+      Descripción:
+    </label>
+    <div class="col-9">
+      <textarea class="form-control {% if form.description.errors %}border-bottom border-danger{% endif %}" name="description" id="description" placeholder="Mensaje">{% if form.errors or form_service.errors %}{{form.description.value}}{% else %}{{pqr.description}}{% endif %}</textarea>
+    </div>
+    {{form.description.errors}}
+  </div>
+  <div class="form-group row">
+    <label for="state" class="col-3 col-form-label text-right">
+      Estado:
+    </label>
+    <div class="col-9">
+      <select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="state" name="state">
+        <option>Selecciona una opción</option>
+        {% for x in states %}
+          <option value="{{x.id}}" {% if form.errors or form_service.errors %}{% if form.state.value|floatformat:'0' == x.id|floatformat:'0' %}selected{% endif %}{% elif x.id|floatformat:'0' == pqr.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {{form.state.errors}}
+  </div>
+  {% if not pqr %}
+  <div class="form-group row">
+    <label for="score" class="col-3 col-form-label text-right">
+      Calificación:
+    </label>
+    <div class="col-9">
+      <select class="form-control {% if form_service.score.errors %}border-bottom border-danger{% endif %}" id="score" name="score">
+        <option>Selecciona una opción</option>
+        {% for i in '12345'|make_list %}
+          <option value="{{forloop.counter}}" {% if form.errors or form_service.errors %} {% if form_service.score.value|floatformat:'0' == forloop.counter|floatformat:'0' %} selected {% endif %}{% endif %}>{{forloop.counter}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {{form_service.score.errors}}
+  </div>
+  {% endif %}
+</form>
+{% endblock%}
+{% block modal_footer %}
+<button type="button" class="btn btn-sm mt-1 btn-secondary btn-block" data-dismiss="modal">Cerrar</button>
+<button type="submit" form="createform" name="action" value="create" class="btn btn-sm btn-block btn-primary">
+  {% if city %}Editar {% else %}Crear{% endif %}
+</button>
+{% endblock%}

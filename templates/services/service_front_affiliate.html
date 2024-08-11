@@ -1,0 +1,118 @@
+{% extends 'general/base_front.html' %}
+{% load humanize %}
+{% load static %}
+{% block header_color %} bg-Cprimary {% endblock%}
+{% block footer_color %} bg-Csecondary {% endblock%}
+{% block container %}
+<form class="row my-2" method="post" id="form_code">
+	{% csrf_token %}
+	<div class="col-8 offset-2 col-md-4 offset-md-4">	
+		<div class="form-group text-center">
+		    <label for="location" class="">Selecciona una ubicacion</label>
+		    <select id="location" name="location" class="form-control rounded-pill" {% if service %}disabled{% endif %}>
+		    	<option value="">Escoge tu destino</option>
+		    	{% for x in locations %}
+		    	<option value="{{x.id}}" {% if service.location.id|floatformat:'0' == x.id|floatformat:'0'%}selected{% endif %} >{{x.name}}-{{x.address}}</option>
+		    	{% endfor %}
+		    </select>
+		    <div class="help-block with-errors text-danger">{{form.errors.location}}</div>
+		</div>
+	</div>
+</form>
+{% if not service %}
+<div class="row mt-4 text-center">
+	<div class="col-6 offset-3 col-md-4 offset-md-4">
+		<div class="form-group text-center">
+			<button type="submit" form="form_code" class="btn bg-Csecondary text-Cprimary form-control rounded-pill">Código de servicio</button>
+		</div>
+	</div>
+</div>
+{% endif %}
+<div class="row">
+	<div class="col-8 offset-2 col-md-4 offset-md-4">
+		<div class="bg-white h1 p-2 text-center rounded-lg">
+			{% if service %}{{service.code}}{% else %}------{% endif %}
+		</div>
+	</div>
+</div>
+<div class="row my-2">
+	{% comment %} 
+		<div class="col-4 offset-4 col-md-2 offset-md-5 px-0 text-center">
+			<img src="{{publication_main.0.photo.url}}" class="img-fluid">
+		</div>
+	{% endcomment %}
+</div>
+<div class="row mt-3">
+	<div class="col-8 offset-2">
+		<h1 class="text-center text-white">{% if request.user.groups.all.0.id == 1 %}AFILIADO{% elif request.user.groups.all.0.id == 5 %}PLUSS{% else %}ASOCIADO{% endif %}</h1>
+	</div>
+</div>
+<div class="row mt-3">
+	<div class="col-8 offset-2 col-md-6 offset-md-3 text-center">
+		<div class="row ">
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">COD MEBRESIA</div>
+				<div class="m-0 small">{{card.0.code}}</div>
+			</div>
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">CATEGORÍA</div>
+				<div class="m-0 small">{{extended_user.category.name}}</div>
+			</div>
+		</div>
+		<div class="row mt-2 ">
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">MUSICA FAVORITA</div>
+				<div class="m-0 small">{{extended_user.favorite_music}}</div>
+			</div>
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">EMISORA</div>
+				<div class="m-0 small">{{extended_user.favorite_station}}</div>
+			</div>
+		</div>
+		<div class="row mt-2 ">
+			<div class="col-4">
+				<div class="m-0 small font-weight-bold h7-C">CIUDAD</div>
+				<div class="m-0 small">{{extended_user.city.name}}</div>
+			</div>
+			<div class="col-4">
+				<div class="m-0 small font-weight-bold h7-C">SEXO</div>
+				<div class="m-0 small">{{extended_user.gender.name}}</div>
+			</div>
+			<div class="col-4">
+				<div class="m-0 small font-weight-bold h7-C">RH</div>
+				<div class="m-0 small">{{extended_user.blood_type.name}}</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row my-4">
+	<div class="col-4 offset-2 col-md-2 offset-md-4 px-2">
+		<div class="card-CResponsive pt-C65 border border-Csecondary rounded-C5">
+			<div class="w-100 h-100">
+				<a href="{% url 'services:pqr_front' %}" class="w-100 h-100">
+					<div class="row mx-0 w-100 h-C65">
+						<div class="col-6 offset-3 col-md-4 offset-md-4 align-self-center">
+							<img src="{% static 'image/encuesta.png' %}" class="img-fluid">
+						</div>
+					</div>
+					<div class="row mx-0 w-100 h-C35 text-dark d-flex justify-content-center">Encuesta</div>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-4 col-md-2 px-2">
+		<div class="card-CResponsive pt-C65 border border-Csecondary rounded-C5 js-reload">
+			<div class="w-100 h-100">
+				<a href="" class="w-100 h-100">
+					<div class="row mx-0 w-100 h-C65">
+						<div class="col-6 offset-3 col-md-4 offset-md-4 align-self-center">
+							<img src="{% static 'image/renovar_servicio.png' %}" class="img-fluid">
+						</div>
+					</div>
+					<div class="row mx-0 w-100 h-C35 text-dark d-flex justify-content-center">Renueva tu servicio</div>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock%}

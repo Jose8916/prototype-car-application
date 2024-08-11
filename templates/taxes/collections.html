@@ -1,0 +1,100 @@
+{% extends "general/base.html" %}
+{% block menu %}{% include "general/taxe_menu.html" %}{% endblock%}
+{% block container %}
+<div class="row mt-2 d-flex justify-content-end">
+  <a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+</div>
+<div class="row mx-0 table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Valor</th>
+        <th scope="col">Cobro Dinamico</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x  in collections %}
+      <tr>
+        <th scope="row">{{x.id}}</th>
+        <td>{{x.name}}</td>
+        <td>{{x.value}}</td>
+        <td>{{x.dynamic}}</td>
+        <td>{{x.state.name}}</td>
+        <td class="px-2 py-3" scope="col">
+          <a class="fa fa-pencil-square-o cursor-pointer" href="{% url 'taxes:collections' x.id %}"></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+{% block modal_title %}Crear Recaurdo{% endblock%}
+{% block modal_body %}
+<form  method="POST" class="form-signin m-2" id="createform">
+  {% csrf_token %}
+  <div class="form-group row">
+    <label for="name" class="col-3 col-form-label text-right">
+      Nombre:
+    </label>
+    <div class="col-9">
+      <input type="text" class="form-control {% if form.name.errors %}border-bottom border-danger{% endif %}" name="name" id="name" placeholder="Nombre" value="{% if form.errors %}{{form.name.value}}{% else %}{{collection.name}}{% endif %}">
+    </div>
+    {% if form.name.errors %}
+      {{form.name.errors}}
+    {% endif %}
+  </div>
+  <div class="form-group row">
+    <label for="name" class="col-3 col-form-label text-right">
+      Valor:
+    </label>
+    <div class="col-3">
+      <input type="number" class="form-control {% if form.value.errors %}border-bottom border-danger{% endif %}" name="value" id="value" placeholder="Valor" value="{% if form.errors %}{{form.value.value|floatformat:0}}{% else %}{{collection.value|floatformat:0}}{% endif %}">
+    </div>
+    {% if form.value.errors %}
+      {{form.value.errors}}
+    {% endif %}
+  </div>
+  <div class="form-group row">
+    <label for="name" class="col-3 col-form-label text-right">
+      Estado:
+    </label>
+    <div class="col-9">
+      <select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="state" name="state">
+        <option>Selecciona una opción</option>
+        {% for x in states %}
+          <option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == collection.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if form.state.errors %}
+      {{form.state.errors}}
+    {% endif %}
+  </div>
+  <div class="form-check">
+    <input type="checkbox" class="form-check-input" id="dynamic" name="dynamic" {% if form.errors and form.dynamic.value %} checked {% elif collection.dynamic  %}checked {% endif %}>
+    <label class="form-check-label" for="dynamic">Cobro Dinamico</label>
+    {% if form.collection.errors %}
+      {{form.collection.errors}}
+    {% endif %}
+  </div>
+</form>
+{% endblock%}
+{% block modal_footer %}
+<button type="button" class="btn btn-sm mt-1 btn-secondary btn-block" data-dismiss="modal">Cerrar</button>
+<button type="submit" form="createform" name="action" value="create" class="btn btn-sm btn-block btn-primary">Crear
+</button>
+{% endblock%}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+  {% if category %}
+  window.history.back();
+  {% endif %}
+});
+</script>
+{% endblock %}

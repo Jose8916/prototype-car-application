@@ -1,0 +1,156 @@
+{% extends "general/base.html" %}
+{% block menu %}{% include "general/service_menu.html" %}{% endblock%}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+  window.location.replace("/pqr");
+});
+</script> 
+{% endblock %}
+{% block container %}
+<form id="form_search" class="row mt-2" method="get">
+    <div class="col-5">
+        <div class="form-group">
+            <input type="text" class="form-control" type="text" name="bar_search" value="" placeholder="Documento o teléfono">
+        </div>
+    </div>
+    <div class="col-5">
+        <div class="form-group">
+            <select class="form-control" id="filter_state" name="filter_state">
+              <option value="">Estados(opcional)</option>
+              {% for x in states %}
+                <option value="{{x.id}}">{{x.name}}</option>
+              {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="col-2">
+        <a href="#"><button type="submit"  class="btn bg-primary btn-block text-truncate text-white"><i class="fa fa-search"></i> Buscar</button></a>
+    </div>
+
+    <!-- <div class="col-2">
+        <button type="submit" name="action" value="download" class="btn bg-Cprimary btn-block text-white"><i class="fa fa-download"></i> Exportar</button>
+    </div>
+    <div class="col-2">
+        <a href="#"><button type="button" id="btn_clean" class="btn bg-Cprimary btn-block text-truncate text-white btn_clean"><i class="fa fa-eraser"></i> Limpiar Filtro</button></a>
+    </div> -->
+</form>
+{% if request.user.groups.all.0.id == 1 or request.user.groups.all.0.id == 2 or request.user.groups.all.0.id == 3 %}
+<div class="row mt-2 d-flex justify-content-end">
+  <a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+</div>
+{% endif %}
+<div class="row table-responsive" style="height:100%">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Operador</th>
+        <th scope="col">Fecha de modificación</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Asunto</th>
+        <th scope="col">Ciudad</th>
+        <th scope="col">Celular</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Codigo invitación</th>
+        <th scope="col">Categoria</th>
+        <th scope="col">Tarjeta</th>
+        <th scope="col">Correo</th>
+        <th scope="col">Teléfono secundario</th>
+        <th scope="col">Fecha de creación</th>
+        <th scope="col">Descripcion</th>
+        <th scope="col">Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in pqrs %}
+      <tr>
+        <th scope="row">{{x.id}}</th>
+        <td>{{x.user_answer.user.email}}</td>
+        <td>{{x.modification_date|date:"Y-m-d H:i:s"}}</td>
+        <td>{{x.state.name}}</td>
+        <td>{{x.type_pqr.name}}</td>
+        <td>{{x.user_question.city.name}}</td>
+        <td>{{x.user_question.cell_phone}}</td>
+        <td>{{x.user_question.user.get_full_name}}</td>
+        <td>{{x.user_question.get_code_invitation}}</td>
+        <td>{{x.user_question.category.name}}</td>
+        <td>{{x.user_question.get_group_name}}</td>
+        <td>{{x.user_question.user.email}}</td>
+        <td>{{x.user_question.phone_secondary}}</td>        
+        <td>{{x.creation_date|date:"Y-m-d H:i:s"}}</td>
+        <td>{{x.description}}</td>
+        <td class="px-2 py-3" scope="col">
+          <a class="fa fa-pencil-square-o cursor-pointer" href="{% url 'services:pqr' x.id %}"></a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <div class="col-12">
+    <nav>
+      <ul class="pagination justify-content-center">
+        {% if pqrs.has_previous %}
+        <li class="page-item"><a  class="page-link" href="?page=1"><i class="fa fa-fast-backward"></i></a></li>
+        {% endif %}
+        {% if pqrs.has_previous %}
+        <li class="page-item"><a  class="page-link" href="?page={{ pqrs.previous_page_number }}"><i class="fa fa-step-backward"></i></a></li>
+        {% endif %}
+        {% for i in pqrs.paginator.page_range %}
+          {% if pqrs.number == i %}
+          <li class="page-item active"><a  class="page-link" href="" disabled>{{ i }}</a></li>
+          {% else %}
+          <li class="page-item"><a  class="page-link" href="?page={{ i }}" >{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if pqrs.has_next%}
+        <li class="page-item"><a  class="page-link" href="?page={{ pqrs.next_page_number }}"><i class="fa fa-step-forward"></i></a></li>
+        {% endif %}
+        {% if pqrs.has_next %}
+        <li class="page-item"><a  class="page-link" href="?page={{ pqrs.paginator.num_pages }}"><i class="fa fa-fast-forward"></i></a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+{% block modal_title %}
+    Editar PQR
+{% endblock%}
+{% block modal_body %}
+<form method="POST" class="form-signin m-2" id="createform">
+  {% csrf_token %}  
+  <div class="form-group row">
+    <label for="description" class="col-3 col-form-label text-right">
+      Descripción:
+    </label>
+    <div class="col-9">
+      <textarea class="form-control {% if form.description.errors %}border-bottom border-danger{% endif %}" name="description" id="description" placeholder="Mensaje">{% if form.errors %}{{form.description.value}}{% else %}{{pqr.description}}{% endif %}</textarea>
+    </div>
+    {{form.description.errors}}
+  </div>
+  <div class="form-group row">
+    <label for="state" class="col-3 col-form-label text-right">
+      Estados:
+    </label>
+    <div class="col-9">
+      <select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="state" name="state">
+        <option>Selecciona una opción</option>
+        {% for x in states %}
+          <option value="1" {% if form.errors and form.state.value|floatformat:'0' == 1|floatformat:'0' %} selected {% elif 1|floatformat:'0' == pqr.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {{form.state.errors}}    
+  </div>
+</form>
+{% endblock%}
+{% block modal_footer %}
+<button type="button" class="btn btn-sm mt-1 btn-secondary btn-block" data-dismiss="modal">Cerrar</button>
+<button type="submit" form="createform" name="action" value="create" class="btn btn-sm btn-block btn-primary">
+    Editar
+</button>
+{% endblock%}

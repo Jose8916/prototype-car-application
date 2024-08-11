@@ -1,0 +1,18 @@
+{% load static %}
+<div class="col col-md-12 border-bottom">
+	<div class="row py-2">
+		<div class="col offset-1 d-flex flex-wrap stepLabel_bottomline">
+			{% if request.user.groups.all.0.id == 4 %}
+			<!-- <a class="py-2 mr-5 text-secondary font-weight-bold {{active_users}}" href="{% url 'users:users' %}">Usuarios</a> -->
+			<a style="border-left: 2px #c0c0c0 solid;border-right: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_publications}}" href="{% url 'services:publications' %}">Publicaciones</a>
+			<!-- <a class="py-2 mr-5 text-secondary font-weight-bold {{active_coupons}}" href="{% url 'services:pqr' %}">PQRs</a> -->
+			{% endif %}
+			{% if request.user.groups.all.0.id == 6 %}
+			<a style="border-left: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_registration_two}}" href="{% url 'users:registration_two' %}">Completar registro</a>
+			<a style="border-left: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_registration_vehicles}}" href="{% url 'vehicles:registration_vehicles' %}">Registrar o editar vehiculos</a>
+			<a style="border-left: 2px #c0c0c0 solid;border-right: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_registration_allys}}" href="{% url 'users:allys_two' %}">Registrar o editar aliados</a>
+			{% endif %}
+
+		</div>
+	</div>
+</div>

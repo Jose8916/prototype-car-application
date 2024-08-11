@@ -1,0 +1,180 @@
+{% extends "general/base_login.html" %}
+{% load static %}
+{% block container %}
+<form class="form-signin" id="form-register" method="POST">
+  {% csrf_token %}
+  <div class="text-center">
+    <img src="{% static "image/LOGO_ADO.webp" %}" class="img-fluid rounded mx-auto d-block" style="max-width: 60%;">
+    {# <h1 class="h3 font-weight-normal">Registo de Afiliados</h1> #}
+  </div>
+  {% if code %}
+  <div class="form-label-group">
+    <input type="text" placeholder="Código De invitación" class="form-control" name="cod" value="{{code}}" id="cod">
+    <label for="cod">Código De invitación</label>
+  </div>
+  {% endif %}
+   <div class="form-group row">
+    <label for="group" class="col-3 col-form-label text-right ">Tipo de afilición</label>
+    <div class="col-9">
+      <select class="form-control" id="group" name="group">
+        <option value="">Selecciona el tipo</option>
+        {% for x in groups %}
+          <option value="{{x.id}}" {% if formExtendUser.group.value|floatformat:'0' == x.id|floatformat:'0' %}selected{% endif %}>{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-12 text-danger small">
+        {{formExtendUser.errors.group}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="first_name" class="col-3 col-form-label text-right small">Nombres</label>
+    <div class="col-9">
+      <input type="text" placeholder="xxxxxxxxx" class="form-control" name="first_name" value="{{formUser.first_name.value}}" id="first_name" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formUser.errors.first_name}}
+    </div>  
+  </div>
+  <div class="form-group row">
+    <label for="last_name" class="col-3 col-form-label text-right ">Apellidos</label>
+    <div class="col-9">
+      <input type="text" placeholder="xxxxxxxxx" class="form-control" name="last_name" value="{{formUser.last_name.value}}" id="last_name" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formUser.errors.last_name}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="email" class="col-3 col-form-label text-right ">Email</label>
+    <div class="col-9">
+      <input type="email" placeholder="Dirección de correo electrónico" class="form-control" name="email" value="{{formUser.email.value}}" id="email" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formUser.errors.email}}
+        {{formUser.errors.username}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="phone1" class="col-3 col-form-label text-right ">Telefono</label>
+    <div class="col-9">
+      <input type="text" placeholder="# telefonico" class="form-control" name="phone1" value="{{formExtendUser.phone1.value}}" id="phone1" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formExtendUser.errors.phone1}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="city" class="col-3 col-form-label text-right ">Ciudad</label>
+    <div class="col-9">
+      <select class="form-control" id="city" name="city">
+        <option value="">Selecciona una ciudad</option>
+        {% for x in cities %}
+          <option value="{{x.id}}" {% if formExtendUser.city.value|floatformat:'0' == x.id|floatformat:'0' %}selected{% endif %}>{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-12 text-danger small">
+        {{formExtendUser.errors.city}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="document_type" class="col-3 col-form-label text-right">Tipo de documento</label>
+    <div class="col-9">
+      <select class="form-control" id="document_type" name="document_type">
+        <option value="">Selecciona un tipo de documento</option>
+        {% for x in documents %}
+          <option value="{{x.id}}" {% if formExtendUser.document_type.value|floatformat:'0' == x.id|floatformat:'0' %}selected{% endif %}>{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-12 text-danger small">
+        {{formExtendUser.errors.document_type}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="document_number" class="col-3 col-form-label text-right "># Documento</label>
+    <div class="col-9">
+      <input type="text" placeholder="xxxxxxxxx" class="form-control" name="document_number" value="{{formExtendUser.document_number.value}}" id="document_number" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formExtendUser.errors.document_number}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="expedition_date" class="col-3 col-form-label text-right ">Fecha de expedición</label>
+    <div class="col-9">
+      <input type="date" class="form-control" name="expedition_date" value="{{formExtendUser.expedition_date.value}}" id="expedition_date" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formExtendUser.errors.expedition_date}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="new_password" class="col-3 col-form-label text-right ">Contraseña</label>
+    <div class="col-9">
+      <input type="password" placeholder="xxxxxxxxx" class="form-control" name="new_password" value="{% if formUser.errors.new_password or  formUser.errors.repeat_password %}{% else %}{{formUser.new_password.value}}{% endif %}" id="new_password" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formUser.errors.new_password}}
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="repeat_password" class="col-3 col-form-label text-right ">Repetir Contraseña</label>
+    <div class="col-9">
+      <input type="password" placeholder="xxxxxxxxx" class="form-control" name="repeat_password" value="{% if formUser.errors.new_password or formUser.errors.repeat_password %}{% else %}{{formUser.repeat_password.value}}{% endif %}" id="repeat_password" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{formUser.errors.repeat_password}}
+    </div>
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Registrate</button>
+</form>
+<div class="">
+  <a href="{% url "users:login" %}">Inicia Sesión</a>
+</div>
+{% for err in formUser.non_field_errors %}
+  <div class="text-danger small">
+      {{ err }}
+  </div>
+{% endfor %}
+{% for err in formExtendUser.non_field_errors %}
+  <div class="text-danger small">
+      {{ err }}
+  </div>
+{% endfor %}
+{% endblock %}
+
+{% block modal_title %}
+  Codigó
+{% endblock%}
+{% block modal_body %}
+  <div class="row text-success mt-0 mx-0">
+    Se ha enviado un código al email registrado, por favor verifique en su correo
+  </div>
+  <div class="form-group row mt-2 mx-0">
+    <div class="col-6 offset-3">
+      <input type="code" form="form-register" placeholder="xxxxxx" class="form-control" name="code" value="{{code_verify}}" id="code" />
+    </div>
+    <div class="col-12 text-danger small">
+        {{code_error}}
+    </div>
+  </div>
+{% endblock%}
+{% block modal_footer %}
+  <div class="container-fluid">
+    <div class="row text-success mt-0 mx-0">
+    <div class="col-4 offset-4">
+      <button class="btn btn-sm btn-success btn-block" form="form-register" name="new_code" type="submit">Nuevo Codigo</button>
+    </div>
+    <div class="col-4">
+      <button class="btn btn-sm btn-primary btn-block" form="form-register" type="submit">Enviar</button>  
+    </div>
+  </div>
+  </div>
+{% endblock%}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+</script>
+{% endblock %}

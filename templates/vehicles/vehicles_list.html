@@ -1,0 +1,245 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/user_menu.html" %}{% endblock%}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+	{% if publication %}
+	window.history.back();
+	{% endif %}
+});
+</script>
+{% endblock %}
+{% block container %}
+<style>
+	.modal-dialog{
+		max-width: 70em;
+		width: 70em
+	}
+</style>
+<form id="form_search" class="row mt-4" method="get">
+	<div class="col-2">
+		<div class="btn btn-block bg-primary text-white">
+		  Filtros
+		</div>
+	</div>
+	<div class="col-4">
+	  <div class="form-group">
+		<input type="text" class="form-control" type="text" name="bar_search" value="" placeholder="Placa, Telefono, Empresa">
+	  </div>
+	</div>
+	<div class="col-3">
+	  <div class="form-group">
+		<select class="form-control" id="city_search" name="city_search">
+		  <option value="">Ciudad(opcional)</option>
+		  {% for x in cities %}
+			<option value="{{x.id}}">{{x.name}}</option>
+		  {% endfor %}
+		</select>
+	  </div>
+	</div>
+	<div class="col-3">
+	  	<a href="#">
+			<button type="submit" class="btn bg-primary btn-block text-truncate text-white">
+				<i class="fa fa-search"></i>
+				<span>Buscar</span>
+			</button>
+		</a>
+	</div>
+</form>
+
+<div class="row d-flex justify-content-end">
+	<a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal">
+		<i class="fa fa-plus mr-2"></i>Nuevo
+	</a>
+</div>
+<div class="row table-responsive" style="height: 500px;">
+	<table class="table table-striped" style="display:inline-block; position:relative; overflow: auto">
+		<thead>
+			<tr>
+				<th scope="col">Id</th>
+				<th scope="col">Foto Conductor</th>
+				<th scope="col">Foto Tarjeton</th>
+				<th scope="col">Foto Vehículo</th>
+				<th scope="col">Fecha Registro</th>
+				<th scope="col">Estado</th>
+				<th scope="col">Nombre Usuario</th>
+				<th scope="col">Telefono Usuario</th>
+				<th scope="col">Ciudad Usuario</th>
+				<th scope="col">Placa</th>
+				<th scope="col">Modelo</th>
+				<th scope="col">Marca</th>
+				<th scope="col">Linea</th>
+				<th scope="col">Fecha Tecnomecanica</th>
+				<th scope="col">Fecha Tarjeton</th>
+				<th scope="col">Opciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for x in vehicles_list %}
+			<tr>
+				<td scope="row">{{ x.id }}</td>
+				<td scope="row">
+					{% if x.user.photo %}
+						<button clas="btn btn-info btn-sm" onclick="abrir_imagen_modal('{{ x.user.photo.url }}','Foto conductor')"><i class="fa fa-image"></i></button>
+					{% endif %}
+				</td>
+				<td scope="row">
+					{% if x.tarjeton %}
+						<button clas="btn btn-info btn-sm" onclick="abrir_imagen_modal('{{ x.tarjeton.url }}','Foto tarjeton')"><i class="fa fa-image"></i></button>
+					{% endif %}
+				</td>
+				<td scope="row">
+					{% if x.photo %}
+						<button clas="btn btn-info btn-sm" onclick="abrir_imagen_modal('{{ x.photo.url }}','Foto vehículo')"><i class="fa fa-image"></i></button>
+					{% endif %}
+				</td>
+				<td scope="row">{{ x.create_date|date:"Y-m-d" }}</td>
+				<td scope="row">{{ x.state.name }}</td>
+				<td scope="row">{{ x.user.contact_person_name }}</td>
+				<td scope="row">{{ x.user.contact_person_phone }}</td>
+				<td scope="row">{{ x.user.city.name }}</td>
+				<td scope="row">{{ x.plate }}</td>
+				<td scope="row">{{ x.model }}</td>
+				<td scope="row">{{ x.line }}</td>
+				<td scope="row">{{ x.brand }}</td>
+				<td scope="row">{{ x.technomechanical_date|date:"Y-m-d" }}</td>
+				<td scope="row">{{ x.tarjeton_date |date:"Y-m-d"}}</td>
+				<td scope="row">
+					<a class="fa fa-pencil-square-o text-Cprimary ml-2 cursor-pointer" href="{% url 'vehicles:vehicles_list' x.id %}"></a>
+				</td>
+			</tr>		
+			{% endfor %}
+		</tbody>	
+	</table>
+	<div class="row my-2">
+		<div class="col-md-8 offset-md-3">
+			<div class="row">
+				<div class="col-10 offset-1 col-md-8 offset-lg-2 px-1">
+					<div class="row">
+						<div class="col-12 px-1">
+							<div class="row mx-0 d-flex justify-content-center">
+								{% if vehicles_list.has_previous %}
+									<a  class="justify-content-center align-items-center mx-1 my-1 paginatorH" href="?page=1"><i class="fa fa-fast-backward"></i></a>
+								{% endif %}
+								{% if vehicles_list.has_previous %}
+									<a  class="justify-content-center align-items-center mx-1 my-1 paginatorH" href="?page={{ vehicles_list.previous_page_number }}"><i class="fa fa-step-backward"></i></a>
+								{% endif %}
+								{% for i in vehicles_list.paginator.page_range %}
+								{% if vehicles_list.number == i %}
+									<a  class="text-secondary justify-content-center align-items-center mx-1 my-1 paginatorH" href="" disabled>{{ i }}</a>
+								{% else %}
+									<a  class="justify-content-center align-items-center mx-1 my-1 paginatorH" href="?page={{ i }}" >{{ i }}</a>
+								{% endif %}
+								{% endfor %}
+								{% if vehicles_list.has_next%}
+									<a  class="justify-content-center align-items-center mx-1 my-1 paginatorH" href="?page={{ vehicles_list.next_page_number }}"><i class="fa fa-step-forward"></i></a>
+								{% endif %}
+								{% if vehicles_list.has_next %}
+									<a  class="justify-content-center align-items-center mx-1 my-1 paginatorH" href="?page={{ vehicles_list.paginator.num_pages }}"><i class="fa fa-fast-forward"></i></a>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+{% block modal_title %}
+	{% if pk %}
+		Editar 
+	{% else %}
+		Crear
+	{% endif %} 
+	Vehiculo 
+{% endblock%}
+{% block modal_body %}
+<form method="POST" class="form-row form-signin m-2" id="createform" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group col-12 text-center">
+		<div class="form-group col-6 text-center" style=" margin: 0 auto; display: flex; align-items: flex-end">
+			<label style="width: 12em">{{form.invitation_code.label}}</label>
+			{{form.invitation_code}}
+			<div class="help-block with-errors text-danger">{{form.invitation_code.errors}}</div>
+		</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label>{{form.plate.label}}</label>
+        {{form.plate}}
+        <div class="help-block with-errors text-danger">{{form.plate.errors}}</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label>{{form.brand.label}}</label>
+        {{form.brand}}
+        <div class="help-block with-errors text-danger">{{form.brand.errors}}</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label>{{form.line.label}}</label>
+        {{form.line}}
+        <div class="help-block with-errors text-danger">{{form.line.errors}}</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label>{{form.model.label}}</label>
+        {{form.model}}
+        <div class="help-block with-errors text-danger">{{form.model.errors}}</div>
+    </div>
+	<div class="form-group col-5 text-center">
+        <label>{{form.state.label}}</label>
+        {{form.state}}
+         <!--<div class="help-block with-errors text-danger">{{form.plate.errors}}</div> -->
+    </div>
+	
+    <div class="form-group col-8 text-center">
+        <label>{{form.technomechanical.label}}</label>
+        {{form.technomechanical}}
+		<div class="help-block with-errors text-danger">{{form.technomechanical.errors}}</div>
+    </div>
+    <div class="form-group col-4 text-center">
+        <label>{{form.technomechanical_date.label}}</label>
+        {{form.technomechanical_date}} 
+		<div class="help-block with-errors text-danger">{{form.technomechanical_date.errors}}</div>
+    </div>
+    <div class="form-group col-8 text-center">
+        <label for="soat">{{form.soat.label}}</label>
+		{{form.soat}}
+        <div class="help-block with-errors text-danger">{{form.soat.errors}}</div>
+    </div>
+    <div class="form-group col-4 text-center">
+        <label for="soat_date">{{form.soat_date.label}}</label>
+        {{form.soat_date}}
+        <div class="help-block with-errors text-danger">{{form.soat_date.errors}}</div>
+    </div>
+	<div class="form-group col-8 text-center">
+        <label for="tarjeton">{{form.tarjeton.label}}</label>
+		{{form.tarjeton}}
+        <div class="help-block with-errors text-danger">{{form.tarjeton.errors}}</div>
+    </div>
+    <div class="form-group col-4 text-center">
+        <label for="tarjeton_date">{{form.tarjeton_date.label}}</label>
+        {{form.tarjeton_date}}
+        <div class="help-block with-errors text-danger">{{form.tarjeton_date.errors}}</div>
+    </div>
+    <div class="form-group col-8 text-center">
+        <label>{{form.photo.label}}</label>
+        {{form.photo}}
+        <div class="help-block with-errors text-danger">{{form.photo.errors}}</div>
+    </div>
+    {% for err in form.non_field_errors %}
+    <div class="col-10 offset-1">
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+    </div>
+    {% endfor %}
+</form>
+{% endblock%}
+{% block modal_footer %}
+<button type="button" class="btn btn-sm btn-secondary btn-block" data-dismiss="modal" style="margin-top:.5em!important">Cerrar</button>
+<button type="submit" form="createform" name="action" value="create" class="btn btn-sm btn-block btn-primary">
+	{% if city %}Editar {% else %}Crear{% endif %}
+</button>
+{% endblock%}

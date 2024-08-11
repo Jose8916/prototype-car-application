@@ -1,0 +1,143 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/taxe_menu.html" %}{% endblock%}
+{% load i18n %}
+{% load admin_urls %}
+{% load import_export_tags %}
+
+{% block breadcrumbs_last %}
+  {% trans "Import" %}
+{% endblock %}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+	{% if category %}
+	window.history.back();
+	{% endif %}
+});
+</script>
+{% endblock %}
+{% block container %}
+	<div class="row">
+		<form class="col-6" method="post" enctype="multipart/form-data">
+		  {% csrf_token %}
+          <div class="input-group">
+            <div class="input-group mb-3 text-left">
+			<input type="file" class="form-control" name="myfile" required accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+			  <div class="input-group-prepend">
+			    <button class="btn-success text-white small btn-sm" type="submit" name="action" value="import">
+			    	Importar
+                </button> 
+			  </div>
+			</div>
+          </div>
+      	</form>
+		<form class="col-3 offset-3" method="get">
+			<button type="submit" name="action" value="export" class="btn btn-block btn-success">Exportar</button>
+		</form>
+	</div>
+	{% if result %}
+
+	  {% if result.has_errors %}
+
+	    <h2>{% trans "Errors" %}</h2>
+	    <ul>
+	      {% for error in result.base_errors  %}
+	      <li>
+	        {{ error.error }}
+	        <div class="traceback">{{ error.traceback|linebreaks }}</div>
+	      </li>
+	      {% endfor %}
+	      {% for line, errors in result.row_errors %}
+	        {% for error in errors %}
+	          <li>
+	            {% trans "Line number" %}: {{ line }} - {{ error.error }}
+	            <div><code>{{ error.row.values|join:", " }}</code></div>
+	            <!-- <div class="traceback">{{ error.traceback|linebreaks }}</div> -->
+	          </li>
+	        {% endfor %}
+	      {% endfor %}
+	    </ul>
+
+	  {% elif result.has_validation_errors %}
+
+	    <h2>{% trans "Some rows failed to validate" %}</h2>
+	      
+	    <p>{% trans "Please correct these errors in your data where possible, then reupload it using the form above." %}</p>
+	    
+	    <table class="import-preview">
+	      <thead>
+	        <tr>
+	          <th>{% trans "Row" %}</th>
+	          <th>{% trans "Errors" %}</th>
+	          {% for field in result.diff_headers %}
+	            <th>{{ field }}</th>
+	          {% endfor %}
+	        </tr>
+	      </thead>
+	      <tbody>
+	      {% for row in result.invalid_rows %}
+	        <tr>
+	          <td>{{ row.number }} </td>
+	          <td class="errors">
+	            <span class="validation-error-count">{{ row.error_count }}</span> 
+	            <div class="validation-error-container">
+	              <ul class="validation-error-list">
+	                {% for field_name, error_list in row.field_specific_errors.items %}
+	                  <li>
+	                      <span class="validation-error-field-label">{{ field_name }}</span>
+	                      <ul>
+	                        {% for error in error_list %}
+	                          <li>{{ error }}</li>
+	                        {% endfor %}
+	                      </ul>
+	                  </li>
+	                {% endfor %}
+	                {% if row.non_field_specific_errors %}
+	                  <li>
+	                    <span class="validation-error-field-label">{% trans "Non field specific" %}</span>
+	                    <ul>
+	                      {% for error in row.non_field_specific_errors %}
+	                        <li>{{ error }}</li>
+	                      {% endfor %}
+	                    </ul>
+	                  </li>
+	                {% endif %}
+	              </ul>
+	            </div>
+	          </td>
+	          {% for field in row.values %}
+	            <td>{{ field }}</td>
+	          {% endfor %}
+	        </tr>
+	      {% endfor %}
+	      </tbody>
+	    </table>
+	  {% endif %}
+
+	{% endif %}
+	<div class="row">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Unidades</th>
+					<th scope="col">Precio $</th>
+					<th scope="col">Descuentos e incrementos %</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for x in lists %}
+				<tr>
+					<td scope="row">{{ x.id }}</td>
+					<td scope="row">{{ x.unit }}</td>
+					<td scope="row">{{ x.value }}</td>
+					<td scope="row">{{ x.discount_increase }}</td>
+					
+				</tr>		
+				{% endfor %}
+			</tbody>	
+		</table>
+	</div>
+	{% endblock %}
+	

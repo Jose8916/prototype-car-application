@@ -1,0 +1,49 @@
+# Ejecutar virtualenv
+    ..\venv\scripts\activate
+
+# Ejecutar aplicacion
+    manage.py runserver
+
+# Credenciales
+    Operador{
+        Usuario: operador@amarillos.com
+        Password: DMSdemo1234
+    }
+    Control calidad {
+        Usuario: control_uno@amarillos.com
+        Password: DMSdemo123
+    }
+    Punto registro{
+        Usuario: punto_uno@amarillos.com
+        Password: DMSdemo123
+    }
+    Asociado{
+        Usuario: adoprueba414@gmail.com
+        Password: S0p0rt3*
+    }
+    Afiliado - PLUSS {
+        Usuario: adoprueba415@gmail.com
+        Password: T3l3f0n0*
+    }
+    
+
+# Estandares CSS
+- Tables{
+    -min-width{
+        fechas: 80px
+        fechas y hora: 100px
+        texto: 150px
+        valores: 80px
+    }
+}
+# Estandares templates
+- fecha = date:"Y-m-d"
+- fecha y hora = date:"Y-m-d H:i:s"
+
+vvsi.osrbp51@xupiv.com:1022408250:T3l3f0n0:U191506899
+jokniparka@gufum.com:1022408250:T3l3f0n0:A031507605
+
+
+
+mayafe3759@iturchia.com:1022408250:T3l3f0n0:A231501562
+repaje7884@iturchia.com:1022408250:T3l3f0n0:C121502474

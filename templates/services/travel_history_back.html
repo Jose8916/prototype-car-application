@@ -1,0 +1,197 @@
+{% extends "general/base.html" %}
+{% block menu %}{% include "general/service_menu.html" %}{% endblock%}
+{% load humanize %}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+  window.location.replace("/travel_history");
+});
+</script> 
+{% endblock %}
+{% block container %}
+<form id="form_search" class="row mt-2" method="get">
+  <div class="col-4">
+    <div class="form-group">
+      <input type="text" class="form-control" type="text" name="bar_search" value="" placeholder="cod. invitación, teléfono, cedula">
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="form-group">
+      <select class="form-control" id="filter_state" name="filter_state">
+        <option value="">Estados(opcional)</option>
+        {% for x in states_service %}
+          <option value="{{x.id}}">{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="col-3">
+    <div class="form-group">
+      <select class="form-control" id="city_search" name="city_search">
+        <option value="">Ciudad(opcional)</option>
+        {% for x in cities %}
+          <option value="{{x.id}}">{{x.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="col-2">
+    <a href="#"><button type="submit"  class="btn bg-primary btn-block text-truncate text-white"><i class="fa fa-search"></i> Buscar</button></a>
+  </div>
+</form>
+{% if request.user.groups.all.0.id == 2 %}
+<div class="row mt-2 d-flex justify-content-end">
+  <a class="h6 text-success font-weight-bold" href="{% url 'services:service_begin' %}"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+</div>
+{% endif %}
+<div class="row table-responsive" style="height: 100%;">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th class="min-80" scope="col">No de contrato</th>
+        <th class="min-100" scope="col">Servicio iniciado</th>
+        <th class="min-80" scope="col">Estado</th>             
+        <th class="min-100" scope="col">Fecha de modificación PQR</th> 
+        <th class="min-80" scope="col">Código de servicio</th>        
+        {% if request.user.groups.all.0.id == 4 %}
+         <th class="min-100" scope="col">Fecha creación código de servicio</th>
+        {% endif %}
+        <th class="min-100" scope="col">Servicio finalizado</th>
+        <th class="min-80"  scope="col">Ciudad y direción de estino</th>
+        <th class="min-80"  scope="col">Tarjeta - Categoria</th>
+        <th class="min-150" scope="col">Información pasajero</th>
+        <th class="min-150" scope="col">Información conductor</th>        
+        {% if request.user.groups.all.0.id == 7 %}
+        <th scope="col">Llamar</th>
+        {% endif %}
+        <th class="min-80" scope="col">Contestó la llamada</th>        
+        <th class="min-80" scope="col">Calificación</th>
+        <th class="min-80" scope="col">Placa</th>
+        <th class="min-80" scope="col">Metodo de pago</th>
+        <th class="min-80" scope="col">Precio sugerido</th>
+        {% if request.user.groups.all.0.id == 4 %}
+          <th class="min-80" scope="col">tarifa del servicio</th>
+          <th class="min-80" scope="col">Afectación inicial</th>
+            <!--<th style="min-width: 80px " scope="col">Cancelación del servicio</th>-->
+          <th class="min-80"scope="col">Políticas de descuento o aumento</th>
+          <th class="min-80"scope="col">Promociones por categoría</th>
+          {% for y in collections %}
+          <th  scope="col">{{y.name}}</th>
+          {% endfor %}
+        {% endif %}        
+           
+        <th class="min-100" scope="col">Fecha creación PQR</th>          
+           <!--  se quito (ESTADO PQR , USUARIO CONTACTO) 
+            <th class="min-80"scope="col">Estado PQR</th>
+            <th class="min-80"scope="col">Usuario contactado</th>-->
+        <th class="min-80"scope="col">Operador</th>
+        {% if request.user.groups.all.0.id == 7 %}
+        <th scope="col">Opciones</th>
+        {% endif %}
+        <th class="min-80"scope="col">Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for x in services %}
+      <tr>
+        <th scope="row">{{x.id}}</th>
+        <td>{{x.time_start|date:"Y-m-d H:i:s"}}</td>
+        <td>{{x.state.name}}</td>
+        <td>{{x.pqr_records.0.modification_date |date:"Y-m-d H:i:s" }}</td>
+        <td>{{x.code}}</td>
+        {% if request.user.groups.all.0.id == 4 %}
+         <td>{{x.creation_date |date:"Y-m-d H:i:s"}}</td>
+        {% endif %}
+        <td>{{x.time_stop |date:"Y-m-d H:i:s" }}</td>
+        <td>{{x.location.city.name}}<br>{{x.location.address}}</td>
+        <td>{{x.user_receiving.user.groups.all.0.name}} - {{x.user_receiving.category.name}}  </td>
+        <td>
+          <button class="btn btn-sm btn-info" onclick="sw_mensaje('<b>Nombre:</b> {{x.user_receiving.user.get_full_name}}<br><b>Telefono 1:</b> {{x.user_receiving.cell_phone}}<br><b>Telefono 2:</b> {{x.user_receiving.phone_secondary}}<br><b>Codigo:</b> {{x.cod_receiving}}{% if request.user.groups.all.0.id == 4 %}<br><b>Documento:</b> {{x.user_receiving.document_number}}{% endif %}','Información pasajero')" ><i class="fa fa-info-circle"></i></button>
+                {% comment %} {{x.user_receiving.user.get_full_name}}<br>Tel 1:{{x.user_receiving.cell_phone}}<br>Tel 2:{{x.user_receiving.phone_secondary}}<br>Cod:{{x.cod_receiving}}
+                {% if request.user.groups.all.0.id == 4 %}
+                  <br>Doc:{{x.user_receiving.document_number}}
+                {% endif %} {% endcomment %}
+        </td>
+        <td>
+          <button class="btn btn-sm btn-info" onclick="sw_mensaje('<b>Nombre:</b> {{x.user_providing.user.get_full_name}}<br> <b>Telefono 1:</b> {{x.user_providing.cell_phone}}<br> <b>Telefono 2:</b> {{x.user_providing.phone_secondary}}<br> <b>Codigo:</b> {{x.cod_providing}} {% if request.user.groups.all.0.id == 4 %}<br> <b>Documento:</b> {{x.user_providing.document_number}} {% endif %}','Información conductor')"> <i class="fa fa-info-circle"></i> </button> 
+           <!--
+            {{x.user_providing.user.get_full_name}}<br>Tel 1:{{x.user_providing.cell_phone}}<br>Tel 2:{{x.user_providing.phone_secondary}}<br>Cod:{{x.cod_providing}}{% if request.user.groups.all.0.id == 4 %}<br>Doc:{{x.user_providing.document_number}}</td>{% endif %}
+            {% if request.user.groups.all.0.id == 7 %}
+              <td>{% if x.user_providing.call %}SI{% else %}NO{% endif %}</td>
+            {% endif %}-->
+        </td>  
+        <td>{{x.flag_call}}</td>       
+        <td>{{x.score}}</td>
+        <td>{{x.vehicle.plate}}</td>
+        <td>{{x.payment_method.name}}</td>
+        <td>{% if x.total %}${{x.total|intcomma}}{% endif %}</td>
+        {% if request.user.groups.all.0.id == 4 %}
+          <td>{% if x.total %}${{x.price|intcomma}}{% endif %}</td>
+          <td>{% if x.total %}${{x.initial_affectation|intcomma}}{% endif %}</td>
+
+            <!--<td>{% if x.total %} por definir {% endif %}</td>-->
+
+          <td>{% if x.total %}${{x.discount_increase_policies|intcomma}}{% endif %}</td>
+          <td>{% if x.total %}${{x.promotion_category|intcomma}}{% endif %}</td>
+          {% for y in collections %}
+            <td>
+            {% for z in x.service_collection_records %}
+            {% if y.id == z.collection.id and x.total %}
+            ${{z.total_price|intcomma}} 
+            {% endif %}
+            {% endfor %}
+            </td>
+          {% endfor %}
+            <!-- {% for y in x.service_collection_records %} {{y.collection.name}}: {{y.total_price}}{% endfor %} -->
+        {% endif %}
+        
+        <td>{{x.pqr_records.0.creation_date |date:"Y-m-d H:i:s"}}</td>    
+            <!--  SE QUITO (ESTADO)
+            <td>{{x.pqr_records.0.state.name}}</td>
+                <td>{{x.pqr_records.0.user_question.user.get_full_name}}</td>-->
+        <td>{{x.pqr_records.0.user_answer.user.get_full_name}}</td>
+        {% if request.user.groups.all.0.id == 7 %}
+          <td class="px-2 py-3" scope="col">
+            <a class="fa fa-pencil-square-o cursor-pointer" href="{% url 'services:service' x.id %}"></a>
+          </td>
+        {% endif %}
+        <td>{{x.pqr_records.0.description}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>  
+</div>
+<div class="row">
+  <div class="col-12">
+    <nav>
+      <ul class="pagination justify-content-center">
+        {% if services.has_previous %}
+        <li class="page-item"><a  class="page-link" href="?page=1"><i class="fa fa-fast-backward"></i></a></li>
+        {% endif %}
+        {% if services.has_previous %}
+        <li class="page-item"><a  class="page-link" href="?page={{ services.previous_page_number }}"><i class="fa fa-step-backward"></i></a></li>
+        {% endif %}
+        {% for i in services.paginator.page_range %}
+          {% if services.number == i %}
+          <li class="page-item active"><a  class="page-link" href="" disabled>{{ i }}</a></li>
+          {% else %}
+          <li class="page-item"><a  class="page-link" href="?page={{ i }}" >{{ i }}</a></li>
+          {% endif %}
+        {% endfor %}
+        {% if services.has_next%}
+        <li class="page-item"><a  class="page-link" href="?page={{ services.next_page_number }}"><i class="fa fa-step-forward"></i></a></li>
+        {% endif %}
+        {% if services.has_next %}
+        <li class="page-item"><a  class="page-link" href="?page={{ services.paginator.num_pages }}"><i class="fa fa-fast-forward"></i></a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}
+{% block modal_title %}{% endblock%}
+{% block modal_body %}
+{% endblock%}
+{% block modal_footer %}
+{% endblock%}

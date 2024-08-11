@@ -1,0 +1,246 @@
+{% extends 'general/base.html' %}
+{% load humanize %}
+{% block menu %}{% include "general/taxe_menu.html" %}{% endblock%}
+{% block form_modal_title %}Crear Pais{% endblock %}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'apps/users/coupons.js' %}"></script>
+<script>
+	$('#GeneralModal').modal('{{modal}}');
+	$('#GeneralModal').on('hidden.bs.modal', function (e) {
+		window.location.replace("/coupons");
+	});
+</script>
+{% endblock %}
+{% block container %}
+<!-- <div class="col-2">
+	<label class="mt-3" ><h5>Filtrar por :</h5></label>
+</div> -->
+<form id="form_search" class="row mt-4" method="get">
+	
+	<div class="col-1">
+		<div class="form-group">
+			<label class="mt-2" ><h5>Telefono</h5></label>
+		</div>
+	</div>
+	<div class="col-2">
+		<div class="form-group">
+			<input type="text" class="form-control" type="text" name="bar_search" value="" placeholder="Teléfono">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="form-group">
+			<label class="mt-2" ><h5>Ciudad</h5></label>
+		</div>
+	</div>
+	<div class="col-2">
+		<div class="form-group">
+			<select class="form-control" id="filter_group" name="filter_group">
+				<option value="">Ciudad</option>
+					{% for x in cities %}
+				<option value="{{x.id}}">{{x.name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<div class="col-2">
+		<div class="form-group">
+			<label class="mt-2" ><h5>Tarjeta/suscripcion</h5></label>
+		</div>
+	</div>
+	<!-- <div class="col-2">
+		<div class="form-group">
+			<select class="form-control" id="filter_group" name="filter_group">
+				<option value="">Categoria</option>
+					{% for x in groups %}
+					{% csrf_token %}
+				<option value="{{x.id}}">{{x.name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div> -->
+	<div class="col-2">
+		<a href="#"><button type="submit"  class="btn bg-primary btn-block text-truncate text-white"><i class="fa fa-search"></i> Buscar</button></a>
+	</div>
+	<!-- <div class="col-2">
+		<button type="submit" name="action" value="download" class="btn bg-primary btn-block text-truncate text-white"><i class="fa fa-download"></i> Exportar XML</button>
+	</div>-->
+</form>
+
+<!-- <form id="form_search" class="row mt-2" method="get">
+	<div class="col-5">
+		<div class="form-group">
+			<input type="text" class="form-control" type="text" name="bar_search" value="" placeholder="Nombre, apellido o teléfono">
+		</div>
+	</div>
+	<div class="col-5">
+		<div class="form-group">
+			<select class="form-control" id="filter_group" name="filter_group">
+				<option value="">Tipo</option>
+					{% for x in groups %}
+				<option value="{{x.id}}">{{x.name}}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<div class="col-2">
+		<a href="#"><button type="submit"  class="btn bg-primary btn-block text-truncate text-white"><i class="fa fa-search"></i> Buscar</button></a>
+	</div>
+</form> -->
+
+	<div class="row mt-2 d-flex justify-content-end">
+		<a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+	</div>
+	<div class="row mx-0 table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col" class="text-center min-80">Id</th>
+					<th scope="col" class="text-center min-100">Fecha de creado</th>
+					<th scope="col" class="text-left min-150">Nombre</th>
+					<th scope="col" class="text-left min-150">Apellido</th>
+					<th scope="col" class="text-left min-100">Teléfono</th>
+					<th scope="col" class="text-left min-150">Correo electrónico</th>
+					<th scope="col" class="text-left min-150">Código</th>
+					<th scope="col" class="text-left min-150">Categoria</th>
+					<th scope="col" class="text-right min-100">Precio suscripción</th>
+					<th scope="col" class="text-left min-150">Suscripción asignada</th>
+					<th scope="col" class="text-left min-150">Ciudad</th>
+					<th scope="col" class="text-center min-100">¿Utilizado?</th>
+					<th scope="col" class="text-center min-100">Fecha utilizado</th>
+					<th scope="col" class="text-center min-100">Fecha expiración</th>
+					<th scope="col" class="text-center min-100">Estado</th>
+					<th scope="col" class="text-center min-80">Opciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for x in coupons %}
+				<tr>
+					<th scope="row" class="text-center">{{ x.id }}</th>
+					<td scope="row" class="text-center">{{ x.create_date |default_if_none:""|date:"Y-m-d H:i:s" }}</td>
+					<td scope="row" class="text-left">{{ x.first_name|default_if_none:"" }}</td>
+					<td scope="row" class="text-left">{{ x.last_name|default_if_none:"" }}</td>
+					<td scope="row" class="text-left">{{ x.cell_phone|default_if_none:"" }}</td>
+					<td scope="row" class="text-left">{{ x.email|default_if_none:"" }}</td>
+					<td scope="row" class="text-left">{{ x.code }}</td>					
+					<td scope="row" class="text-left">{{ x.subscription.group.name }}</td>
+					<td scope="row" class="text-right">${{ x.subscription.price|default_if_none:0|intcomma}}</td>
+					<td scope="row" class="text-left">{{ x.subscription.type_subscription.name }}</td>
+					<td scope="row" class="text-left">{{ x.city.name|default_if_none:"" }}</td>
+					<td scope="row" class="text-center">{{ x.get_used }}</td>
+					<td scope="row" class="text-center">{{ x.get_activation_date|default_if_none:""|date:"Y-m-d H:i:s"  }}</td>
+					<td scope="row" class="text-center">{{ x.expiration_date|default_if_none:""|date:"Y-m-d H:i:s"  }}</td>
+					<td class="text-center">{{ x.state.name }}</td>
+					<td class="text-center">
+						{% if x.used == False  %}
+							<a class="fa fa-pencil-square-o text-Cprimary ml-2 cursor-pointer" href="{% url 'users:coupons' x.id %}"></a>
+						{% endif %}
+					</td>
+				</tr>		
+				{% endfor %}
+			</tbody>	
+		</table>
+	</div>
+{% endblock %}
+{% block modal_title %}{% if pk %}Editar {% else %}Crear{% endif %} Cupón{% endblock%}
+{% block modal_body %}
+<form  method="POST" class="form-row form-signin m-2" id="createform">
+	{% csrf_token %}
+	<div class="form-group col-6 text-center">
+		<label>
+			Nombre:
+    	</label>
+    	<input type="text" class="form-control {% if form.first_name.errors %}}border-bottom border-danger{% endif %}" name="first_name" id="first_name" placeholder="" value="{{form.first_name.value}}">
+    	<div class="help-block with-errors text-danger">{{form.first_name.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>
+			Apellido:
+    	</label>
+    	<input type="text" class="form-control {% if form.last_name.errors %}}border-bottom border-danger{% endif %}" name="last_name" id="last_name" placeholder="" value="{{form.last_name.value}}">
+    	<div class="help-block with-errors text-danger">{{form.last_name.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>
+			Correo electrónico:
+    	</label>
+    	<input type="text" class="form-control {% if form.email.errors %}}border-bottom border-danger{% endif %}" name="email" id="email" placeholder="" value="{{form.email.value}}">
+    	<div class="help-block with-errors text-danger">{{form.email.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>
+			Teléfono:
+    	</label>
+    	<input type="text" class="form-control {% if form.cell_phone.errors %}}border-bottom border-danger{% endif %}" name="cell_phone" id="cell_phone" placeholder="" value="{{form.cell_phone.value}}">
+    	<div class="help-block with-errors text-danger">{{form.cell_phone.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>
+       	 	Ciudad:
+      	</label>
+      	<select class="form-control" id="city" name="city">
+    		<option>-----------</option>
+    		{% for x in cities %}
+    		<option value="{{x.id}}" {% if form.city.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %} >{{x.name}}</option>
+    		{% endfor %}
+    	</select>
+    	<div class="help-block with-errors text-danger">{{form.city.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>
+			Código:
+    	</label>
+    	<input type="text" class="form-control {% if form.code.errors %}}border-bottom border-danger{% endif %}" name="code" id="code" placeholder="" value="{{form.code.value}}">
+    	<div class="help-block with-errors text-danger">{{form.code.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>
+       	 	Suscripción:
+      	</label>
+      	<select class="form-control" id="subscription" name="subscription">
+    		<option>-----------</option>
+    		{% for x in subscriptions %}
+    		<option value="{{x.id}}" {% if form.subscription.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %} >{{x.group.name}} - {{x.type_subscription.name}}</option>
+    		{% endfor %}
+    	</select>
+    	<div class="help-block with-errors text-danger">{{form.errors.subscription}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label for="state">
+       	 	Estado:
+      	</label>
+      	<select class="form-control" id="state" name="state">
+    		<option>-----------</option>
+    		{% for x in states %}
+    		<option value="{{x.id}}" {% if form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %} >{{x.name}}</option>
+    		{% endfor %}
+    	</select>
+    	<div class="help-block with-errors text-danger">{{form.errors.state}}</div>
+	</div>
+	<div class="form-group col-12 text-center">
+		<label for="state">
+       	 	Fecha expiración:
+      	</label>
+      	<input type="datetime-local" class="form-control" name="expiration_date" id="expiration_date" placeholder="" value="{{form.expiration_date.value|date:"Y-m-d H:i"}}">
+    	<div class="help-block with-errors text-danger">{{form.errors.expiration_date}}</div>
+	</div>
+	{% for err in form.non_field_errors %}
+	<div class="col-10 offset-1">
+		<div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+	</div>
+    {% endfor %}
+</form>
+{% endblock%}
+{% block modal_footer %}
+<div class="col-6">
+	<button type="button" class="btn btn-sm btn-block btn-secondary" data-dismiss="modal">Cerrar</button>
+</div>
+<div class="col-6">
+	<button type="submit" form="createform" class="btn btn-sm btn-block btn-primary">
+		{% if pk %}Editar{% else %}Crear{% endif %}
+	</button>	
+</div>
+{% endblock%}

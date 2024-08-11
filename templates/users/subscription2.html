@@ -1,0 +1,113 @@
+{% extends 'general/base.html' %}
+{% load humanize %}
+{% block menu %}{% include "general/taxe_menu.html" %}{% endblock%}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'apps/users/operational_users.js' %}"></script>
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+	window.location.replace("/subscription2");
+});
+</script>
+{% endblock %}
+{% block container %}
+<div class="row table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Id</th>
+				<th scope="col">Grupo</th>
+				<th scope="col">Tipo de subscripción</th>
+				<th scope="col">Descripción</th>
+				<th scope="col">Precio</th>
+				<th scope="col">Bonus directo</th>
+				<th scope="col">Bonus indirecto</th>
+				<th scope="col">Estado</th>
+				<th scope="col">Opciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for x in subscriptions %}
+			<tr>
+				<td scope="row">{{x.id}}</td>
+				<td scope="row">{{x.group}}</td>
+				<td scope="row">{{x.type_subscription.name}}</td>
+				<td scope="row">{{x.description}}</td>
+				<td scope="row" class="text-right">$ {{x.price|floatformat:0|intcomma}}</td>
+				<td scope="row" class="text-right">$ {{x.bonus_direct|floatformat:0|intcomma}}</td>
+				<td scope="row" class="text-right">$ {{x.bonus_indirect|floatformat:0|intcomma}}</td>
+				<td scope="row">{{x.state.name}}</td>
+				<td scope="row">
+					<a class="fa fa-pencil-square-o text-Cprimary ml-2 cursor-pointer" href="{% url 'users:subscription2' x.id %}"></a>
+				</td>
+			</tr>		
+			{% endfor %}
+		</tbody>	
+	</table>
+</div>
+{% endblock %}
+{% block modal_title %}{% if pk %}Editar {% else %}{% endif %}{% endblock%}
+{% block modal_body %}
+<form  method="POST" class="form-row form-signin m-2" id="createform">
+	{% csrf_token %}
+	<div class="form-group col-6 text-center">
+		<label for="price">
+			Precio:
+    	</label>
+    	<input type="text" class="form-control  min="0" {% if form.price.errors %}border-bottom border-danger{% endif %}" name="price" id="price" placeholder="$123" value="{{form.price.value|floatformat:0}}" pattern="^[0-9]+$">
+    	<div class="help-block with-errors text-danger">{{form.price.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label for="state">
+			Estado:
+		</label>
+		<select class="form-control" id="state" name="state">
+			<option>-----------</option>
+    		{% for x in states %}
+    		<option value="{{x.id}}" {% if form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %} >{{x.name}}</option>
+    		{% endfor %}
+    	</select>
+    	<div class="help-block with-errors text-danger">{{form.errors.state}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label for="bonus_direct">
+			Precio:
+    	</label>
+    	<input type="text" class="form-control  min="0" {% if form.bonus_direct.errors %}border-bottom border-danger{% endif %}" name="bonus_direct" id="bonus_direct" placeholder="$123" value="{{form.bonus_direct.value|floatformat:0}}" pattern="^[0-9]+$">
+    	<div class="help-block with-errors text-danger">{{form.bonus_direct.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label for="bonus_indirect">
+			Precio:
+    	</label>
+    	<input type="text" class="form-control  min="0" {% if form.bonus_indirect.errors %}border-bottom border-danger{% endif %}" name="bonus_indirect" id="bonus_indirect" placeholder="$123" value="{{form.bonus_indirect.value|floatformat:0}}" pattern="^[0-9]+$">
+    	<div class="help-block with-errors text-danger">{{form.bonus_indirect.errors}}</div>
+	</div>
+	<div class="form-group col-12 text-center">
+		<label for="description">
+			Descripción:
+		</label>
+		<textarea class="form-control {% if form.description.errors %}}border-bottom border-danger{% endif %}" name="description" id="description" placeholder="Descripcion">{{ form.description.value }}</textarea>
+		<div class="help-block with-errors text-danger" required>{{form.description.errors}}</div>
+	</div>
+	{% for err in form.non_field_errors %}
+	<div class="col-10 offset-1">
+		<div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+	</div>
+    {% endfor %}
+</form>
+{% endblock%}
+{% block modal_footer %}
+<div class="col-6">
+	<button type="button" class="btn btn-sm btn-block btn-secondary" data-dismiss="modal">Cerrar</button>
+</div>
+<div class="col-6">
+	<button type="submit" form="createform" class="btn btn-sm btn-block btn-primary">
+		{% if pk %}Guardar{% else %}Guardar{% endif %}
+	</button>	
+</div>
+{% endblock%}

@@ -1,0 +1,107 @@
+<div class="form-row">
+		<div class="form-group col-4 text-left">
+			<label for="first_name">
+         	 	Nombre:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="first_name" id="first_name" placeholder="Nombres" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="last_name">
+         	 	Apellidos:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="last_name" id="last_name" placeholder="Apellidos" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="email">
+         	 	Correo electronico:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="email" id="email" placeholder="Email" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-4 text-left">
+			<label for="last_name">
+         	 	Tipo documento:
+        	</label>
+        	<select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="state" name="state">
+	    		<option>-----------</option>
+	    		{% for x in states %}
+	    		<option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == publication.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="document_number">
+         	 	No de documento:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="document_number" id="document_number" placeholder="Número de documento" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="first_name">
+         	 	No de celular:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="first_name" id="first_name" placeholder="xxxxxxxxxx" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-4 text-left">
+			<label for="last_name">
+         	 	Membresia:
+        	</label>
+        	<select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="groups" name="groups">
+	    		<option>-----------</option>
+	    		{% for x in states %}
+	    		<option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == publication.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="last_name">
+         	 	Categoria:
+        	</label>
+        	<select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="category" name="category">
+	    		<option>-----------</option>
+	    		{% for x in states %}
+	    		<option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == publication.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="last_name">
+         	 	Ciudad:
+        	</label>
+        	<select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="category" name="category">
+	    		<option>-----------</option>
+	    		{% for x in states %}
+	    		<option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == publication.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+	</div>

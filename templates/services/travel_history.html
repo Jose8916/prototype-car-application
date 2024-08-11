@@ -1,0 +1,266 @@
+{% extends 'general/base_front.html' %}
+{% load humanize %}
+{% load static %}
+{% block header_color %} bg-Cprimary {% endblock%}
+{% block footer_color %} bg-Csecondary {% endblock%}
+{% block script %}
+<script>
+	document.getElementById("new_service").addEventListener("click", function() {
+        window.location.href = "{% url 'services:service_front_affiliate' %}";
+    });
+</script>
+{% endblock %}
+{% block container %}
+<div class="row mt-4">
+	<div class="col-3 offset-8 col-md-2 offset-md-9">	
+		<div type="submit" id="new_service" href="{% url 'services:service_front_affiliate' %}" class="bg-Csecondary text-white rounded-lg p-2 text-center" >
+			<i class="fa fa-plus pointer-C pr-2"></i> Nuevo Servicio
+		</div>
+		<!-- <a href="{% url 'services:service_front_affiliate' %}" class="bg-Csecondary text-white rounded-lg p-2 text-center" ><i class="fa fa-plus pointer-C pr-2" aria-hidden="true"></i><span>Nuevo Servicio</span></a> -->
+	</div>
+</div>
+<div class="row mt-4">
+	<div class="col-8 offset-2  col-md-10 offset-md-1 h5 font-weight-bold">	
+		Historial de viajes:
+	</div>
+</div>
+<div class="row mt-1 mb-2">
+	{% for x in services %}
+	<div class="col-10 offset-1 border-bottom border-Csecondary py-1">
+		<div class="row mx-0">
+			<div class="col-3 px-1 d-flex justify-content-center align-items-center">
+				{{ x.creation_date|date:'Y-m-d H:i:s' }} 
+			</div>
+			<div class="col-2 px-1 d-flex justify-content-center align-items-center">
+				{{x.location.city.name}} 
+			</div>	
+			<div class="col-3 px-1 d-flex justify-content-center align-items-center">
+				{{x.user_providing.card_set.all.0.code}}
+			</div>
+			<div class="col-2 px-1 d-flex justify-content-center align-items-center">
+				{{x.location.address}} 
+			</div>
+			<div class="col-2 px-1 d-flex justify-content-center align-items-center">
+				$ {{ x.total|default_if_none:'0'|intcomma }}
+			</div>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+<div class="row my-2">
+	<div class="col-8 offset-2 px-0 text-center">
+		<img src="{{publication_main.0.photo.url}}" class="img-fluid">
+	</div>
+</div>
+<div class="row mt-3">
+	<div class="col-8 offset-2">
+		<h1 class="text-center text-white">{% if request.user.groups.all.0.id == 1 %}AFILIADO{% elif request.user.groups.all.0.id == 5 %}PLUSS{% else %}ASOCIADO{% endif %}</h1>
+	</div>
+</div>
+<div class="row mt-3">
+	<div class="col-8 offset-2 col-md-6 offset-md-3 text-center">
+		<div class="row ">
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">COD MEBRESIA</div>
+				<div class="m-0 small">{{card.0.code}}</div>
+			</div>
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">CATEGORÍA</div>
+				<div class="m-0 small">{{extended_user.category.name}}</div>
+			</div>
+		</div>
+		<div class="row mt-2 ">
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">MUSICA FAVORITA</div>
+				<div class="m-0 small">{{extended_user.favorite_music}}</div>
+			</div>
+			<div class="col-6">
+				<div class="m-0 small font-weight-bold h7-C">EMISORA</div>
+				<div class="m-0 small">{{extended_user.favorite_station}}</div>
+			</div>
+		</div>
+		<div class="row mt-2 ">
+			<div class="col-4">
+				<div class="m-0 small font-weight-bold h7-C">CIUDAD</div>
+				<div class="m-0 small">{{extended_user.city.name}}</div>
+			</div>
+			<div class="col-4">
+				<div class="m-0 small font-weight-bold h7-C">SEXO</div>
+				<div class="m-0 small">{{extended_user.gender.name}}</div>
+			</div>
+			<div class="col-4">
+				<div class="m-0 small font-weight-bold h7-C">RH</div>
+				<div class="m-0 small">{{extended_user.blood_type.name}}</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock%}
+{% block footer %}
+<!-- <div class="row mt-3">
+	<div class="col-8 offset-2 px-3 border border-Cprimary rounded-C5 text-center py-2">
+		<span class="">Tu servicio vence </span>
+		<span class="text-Cprimary">21/08/2014</span>
+	</div>
+</div> -->
+{% comment %}
+<div class="row my-3">
+	<div class="col-4 offset-4">
+		<hr class="bg-Cprimary">
+	</div>
+</div>
+<div class="row">
+	<div class="col-4 offset-2 p-2">
+		<div class="card-CResponsive pt-C70 border border-Csecondary rounded-C5">
+			<div class="w-100 h-100">
+				<a href="" class="w-100 h-100">
+					<div class="row mx-0 w-100 h-75">
+						<div class="col-6 offset-3 align-self-center">
+							<img src="{% static 'image/encuesta.png' %}" class="img-fluid mt-auto">
+						</div>
+					</div>
+					<div class="row mx-0 w-100 h-25 text-dark d-flex justify-content-center">Encuesta</div>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-4 p-2">
+		<img src="{% static 'image/plan_invitado.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 offset-2 p-2">
+		<img src="{% static 'image/actualiza_datos.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 p-2">
+		<img src="{% static 'image/invita_codigo.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 offset-2 p-2">
+		<img src="{% static 'image/perdiste_tarjeta.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 p-2">
+		<img src="{% static 'image/olvidaste_articulo.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 offset-2 p-2">
+		<img src="{% static 'image/ayudanos_mejorar.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 p-2">
+		<img src="{% static 'image/servicios_facturados.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 offset-2 p-2">
+		<img src="{% static 'image/darse_baja.png' %}" class="img-fluid">
+	</div>
+	<div class="col-4 p-2">
+		<img src="{% static 'image/medios_pago.png' %}" class="img-fluid">
+	</div>
+</div>
+<div class="row my-3">
+	<div class="col-4 offset-4">
+		<hr class="bg-Cprimary">
+	</div>
+</div>
+<div class="row text-center">
+	<div class="col  font-weight-bold">
+		Recomendado
+	</div>
+</div>
+<div class="row mt-3">
+	<div class="col-1 d-flex align-items-center justify-content-center">
+		<i class="fa fa-chevron-left text-Cprimary pointer-C" data-target="#multi-item-carousel" data-slide="prev"></i>
+	</div>  
+    <div class="col-10">
+        <!--Carousel Wrapper-->
+        <div id="multi-item-carousel" class="carousel slide carousel-multi-item" data-ride="carousel">
+            <!--Slides-->
+            <div class="carousel-inner" role="listbox">
+              {% for x in publications_secondary %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="row align-items-center pb-3">
+                      {% for y in x %}
+                        <div class="col-6">
+                          <div class="card-CResponsive pt-C100 ptp-C90 ">
+                            <div class="card shadow-sm w-100 h-100 rounded-C overflow-hidden">
+                              <a class="h-100 w-100" href="{{y.url}}" target="_blank">
+                                <div class="row h-65 m-0 full-Cimage" style="background-image: url({{y.photo.url}});">
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                </div>
+              {% endfor %}
+            </div>
+            <!--/.Slides-->
+        </div>
+    <!--/.Carousel Wrapper-->
+    </div>
+    <div class="col-1 d-flex align-items-center justify-content-center">
+    	<i class="fa fa-chevron-right text-Cprimary pointer-C" data-target="#multi-item-carousel" data-slide="next"></i>
+    </div>
+</div>
+<div class="row mt-3">
+	<div class="col-4 offset-4">
+		<hr class="bg-Cprimary">
+	</div>
+</div>
+<div class="row">
+	<div class="col">
+		<div class="row mt-3">
+			<div class="col-2 offset-5">
+				<img src="{% static 'image/ado_iso.png' %}" class="img-fluid">
+			</div>
+		</div>
+		<div class="row mt-3">
+			<div class="col px-0">
+				<img src="{% static 'image/footer.png' %}" class="img-fluid">
+			</div>
+		</div>
+	</div>
+</div>
+{% endcomment %}
+<div class="modal fade" id="modal_pqr_front" tabindex="-1" role="dialog" aria-labelledby="modal_logout_nav" aria-hidden="true">
+    <form  method="POST" class="modal-dialog" role="document">
+        {% csrf_token %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Agrega un nuevo PQR</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+				<div class="form-group text-center">
+					<label for="type_pqr">
+						Tipo de PQR:
+					</label>
+					<select  id="type_pqr" name="type_pqr" class="form-control rounded-pill">
+						<option>-----------</option>
+						{% for x in type_pqrs %}
+						<option value="{{x.id}}" {% if form.type_pqr.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}>{{x.name}}</option>
+						{% endfor %}
+					</select> {{type_pqr.id}}
+					<div class="help-block with-errors text-danger">{{form.errors.type_pqr}}</div>
+				</div>
+				<div class="form-group text-center">
+					<label for="description">Descripción</label>
+					<textarea type="text" id="description" name="description" class="form-control rounded-pill" placeholder="ej. descripcíon del PQR">{{form.description.value}}</textarea>
+					<div class="help-block with-errors text-danger">{{form.errors.description}}</div>
+				</div>         	
+	            {% for err in form.non_field_errors %}
+            	<div class="col-10 offset-1">
+            		<div class="alert alert-danger alert-dismissible fade show">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          {{err}}
+                    </div>
+            	</div>
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm mt-1 bg-Csecondary btn-block text-white" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-sm btn-block bg-Cprimary text-Csecondary">Aceptar</button>
+            </div>
+        </div>
+    </form>
+</div>	
+{% endblock%}

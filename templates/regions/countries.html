@@ -1,0 +1,63 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/taxe_menu.html" %}{% endblock%}
+{% block form_modal_title %}Crear Pais{% endblock %}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+</script>
+{% endblock %}
+{% block container %}
+	<div class="row mt-2 d-flex justify-content-end">
+		<a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+		{# <button type="submit" form="createform" name="action" value="new" class="btn btn-sm btn-block btn-primary"> #}
+		{# {% if country %}Editar {% else %}Crear{% endif %} #}
+	</div>
+	<div class="row mx-0 table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Pais</th>
+					<th scope="col">Estado</th>
+					<th scope="col">Opciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for country in countries %}
+				<tr>
+					<th scope="row">{{ country.name }}</th>
+					<td>{{ country.state.name }}</td>
+					<td>
+						<a class="fa fa-pencil-square-o text-Cprimary ml-2 cursor-pointer" href="{% url 'regions:countries' country.id %}"></a>
+						{#<a class="fa fa-trash text-danger ml-2 cursor-pointer js-delete" data-value="{{country.id}}" role="button" data-toggle="modal" data-target="#DeleteModal"></a>#}
+					</td>
+				</tr>		
+				{% endfor %}
+			</tbody>	
+		</table>
+	</div>
+	{% endblock %}
+	{% block modal_title %}Crear Pais{% endblock%}
+	{% block modal_body %}
+	<form  method="POST" class="form-signin m-2" id="createform">
+		{% csrf_token %}
+		<div class="form-group">
+			<input type="text" class="form-control {% if form.name.errors %}}border-bottom border-danger{% endif %}" name="name" id="name" placeholder="Nombre" value="{% if country %}{{country.name}}{% elif form.name.errors %}{{form.name.value}}{% endif %}">
+			{% if form.name.errors %}<label for="name">{{form.name.errors}}</label>{% endif %}
+		</div>
+		<div class="form-group">
+			<select class="custom-select {% if form.state.errors %}}border-bottom border-danger{% endif %}" id="sl_state" name="state">
+				<option>Seleccione...</option>
+				{% for x in states %}
+				<option value="{{x.id}}" {% if country %}{% if x.id == country.state.id %}selected{% endif %}{% endif %}>{{x.name}}</option>
+				{% endfor %}
+			</select>
+			{% if form.state.errors %}<label for="sl_state">{{form.state.errors}}</label>{% endif %}
+		</div>
+	</form>
+	{% endblock%}
+	{% block modal_footer %}
+	<button type="button" class="btn btn-sm mt-1 btn-secondary btn-block" data-dismiss="modal">Cerrar</button>
+	<button type="submit" form="createform" name="action" value="create" class="btn btn-sm btn-block btn-primary">
+		{% if country %}Editar {% else %}Crear{% endif %}
+	</button>
+	{% endblock%}

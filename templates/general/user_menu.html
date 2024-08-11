@@ -1,0 +1,14 @@
+{% load static %}
+<div class="col col-md-12 border-bottom">
+	<div class="row py-2">
+		<div class="col offset-1 d-flex flex-wrap stepLabel_bottomline">
+			{% if request.user.groups.all.0.id == 4 %}
+			<a style="border-left: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_operational_users}}" href="{% url 'users:operational_users' %}">Operativos</a>
+			<a style="border-left: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_print_cards}}" href="{% url 'users:print_cards' %}">Usuarios</a>
+			<a style="border-left: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_allys}}" href="{% url 'users:allys' %}">Aliados</a>
+			<a style="border-left: 2px #c0c0c0 solid;border-right: 2px #c0c0c0 solid;" class="pl-2 pr-2 py-2 text-secondary font-weight-bold {{active_vehicles}}" href="{% url 'vehicles:vehicles_list' %}">Vehículos</a>
+			
+			{% endif %}
+		</div>
+	</div>
+</div>

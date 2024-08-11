@@ -1,0 +1,247 @@
+{% extends 'general/base_login.html' %}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'apps/users/registration.js' %}"></script>
+<script>
+	lista_categorias = []
+	{% for x in categories %}
+		lista_categorias.push({"id":"{{x.id}}","name":"{{x.name}}"})
+	{% endfor %}
+$( "#group" ).on( "change", function() {
+	if($(this).val()=="5"){
+		opciones = genera_lista_categoria(1)
+	}else{
+		opciones = genera_lista_categoria(2)
+	}
+	$("#category").html(opciones)
+	$("#category").val("")
+} );
+function genera_lista_categoria(tipo){
+	lista_opciones = "<option value=''>-----------</option>"
+	for(var key in lista_categorias){
+		if(tipo==1 && lista_categorias[key].id=="10"){
+			lista_opciones += '<option value='+lista_categorias[key].id+'>'+lista_categorias[key].name+'</option>'
+		}else if(tipo==2 && lista_categorias[key].id!="10"){
+			lista_opciones += '<option value='+lista_categorias[key].id+'>'+lista_categorias[key].name+'</option>'
+		}		
+	}
+	return lista_opciones
+
+}
+</script>
+{% endblock%}
+{% block container %}
+<div class="container-fluid mb-auto">
+	<div class="row mt-4">
+		<div class="col-4 offset-4">
+			<img src="{% static 'image/ado_logo_s.png' %}" class="img-fluid">
+		</div>
+	</div>
+	<div class="row my-4 text-center">
+		<div class="col font-weight-bold">
+			REGISTRO 
+		</div>
+	</div>
+	<form method="POST" class="form-row" id="createform">
+		{% csrf_token %}
+		<div class="form-group col-md-5 offset-md-1 col-10 offset-1 text-center">
+			<label for="invitation_code">
+	         	 	Codigo de invitación:
+        	</label>
+        	<input type="text" class="form-control rounded-pill" name="invitation_code" id="invitation_code" placeholder="ejemplo: U01225xxxx" value="{{form2.invitation_code.value}}">
+        	<div class="help-block with-errors text-danger">{{form2.errors.invitation_code}}</div>
+		</div>
+		<div class="form-group col-md-5 col-10 offset-md-0 offset-1  text-center">
+			<label for="group">
+	       	 	Tarjeta:
+	      	</label>
+	      	<select class="form-control rounded-pill" id="group" name="group">
+	    		<option value=''>-----------</option>
+	    		{% for x in groups %}
+	    		<option value="{{x.id}}" {% if form.group.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %} >{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+	    	<div class="help-block with-errors text-danger">{{form.errors.group}}</div>
+		</div>
+		<div class="form-group col-md-5 offset-md-1 col-10 offset-1 text-center">
+			<label for="category">
+	       	 	Categoria:
+	      	</label>
+	      	<select class="form-control rounded-pill" id="category" name="category">
+	    		<option>-----------</option>
+	    	</select>
+	    	<div class="help-block with-errors text-danger">{{form2.errors.category}}</div>
+		</div>
+		<div class="form-group col-md-5 col-10 offset-md-0 offset-1  text-center">
+			<label for="first_name">
+         	 	Nombre:
+        	</label>
+        	<input type="text"  class="form-control rounded-pill" name="first_name" id="first_name" value="{{form.first_name.value}}">
+        	<div class="help-block with-errors text-danger">{{form.errors.first_name}}</div>
+		</div>
+		<div class="form-group col-md-5 offset-md-1 col-10 offset-1 text-center">
+			<label for="last_name">
+         	 	Apellidos:
+        	</label>
+        	<input type="text"  class="form-control rounded-pill" name="last_name" id="last_name"  value="{{form.last_name.value}}">
+        	<div class="help-block with-errors text-danger">{{form.errors.last_name}}</div>
+		</div>
+		<div class="form-group col-md-5 col-10 offset-md-0 offset-1  text-center">
+			<label for="email">
+         	 	Correo electronico:
+        	</label>
+        	<input type="text"  class="form-control rounded-pill" name="email" id="email" placeholder="ejemplo@correo.com" value="{{form.email.value}}">
+        	<div class="help-block with-errors text-danger">{{form.errors.email}}</div>
+        	<div class="help-block with-errors text-danger">{{form.errors.username}}</div>
+		</div>
+		<div class="form-group col-md-5 offset-md-1 col-10 offset-1 text-center">
+			<label for="document_type">
+	       	 	Tipo documento:
+	      	</label>
+	      	<select class="form-control rounded-pill" id="document_type" name="document_type">
+	    		<option>-----------</option>
+	    		{% for x in document_types %}
+	    		<option value="{{x.id}}" {% if form2.document_type.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+	    	<div class="help-block with-errors text-danger">{{form2.errors.document_type}}</div>
+		</div>
+		<div class="form-group col-md-5 col-10 offset-md-0 offset-1  text-center">
+			<label for="document_number">
+	       	 	No de documento:
+	      	</label>
+	      	<input type="text" class="form-control rounded-pill" name="document_number" id="document_number" value="{{form2.document_number.value}}">
+	      	<div class="help-block with-errors text-danger">{{form2.errors.document_number}}</div>
+		</div>
+		<div class="form-group col-md-5 offset-md-1 col-10 offset-1 text-center">
+			<label for="cell_phone">
+	       	 	No de celular:
+	      	</label>
+	      	<input type="number" class="form-control rounded-pill" name="cell_phone" id="cell_phone" placeholder="3xxxxxxxxx" value="{{form2.cell_phone.value}}">
+	      	<div class="help-block with-errors text-danger">{{form2.errors.cell_phone}}</div>
+		</div>
+		
+		<div class="form-group col-md-5 col-10 offset-md-0 offset-1 text-center">
+			<label for="city">
+	       	 	Ciudad:
+	      	</label>
+	      	<select class="form-control rounded-pill" id="city" name="city">
+	    		<option>-----------</option>
+	    		{% for x in cities %}
+	    		<option value="{{x.id}}" {% if form2.city.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+	    	<div class="help-block with-errors text-danger">{{form2.errors.city}}</div>
+		</div>
+		<div class="form-group col-md-5 col-10 offset-md-1 offset-1 text-center">
+			<label for="gender">
+				Genero:
+			</label>
+			<select class="form-control rounded-pill {% if form2.gender.errors %}}border-bottom border-danger{% endif %}" name="gender" id="gender">
+				<option>Seleccione...</option>
+				{% for x in genders %}
+				<option value="{{x.id}}" {% if form2.gender.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}>{{x.name}}</option>
+				{% endfor %}
+			</select>
+			<div class="help-block with-errors text-danger">{{form2.gender.errors}}</div>
+		</div>
+		<div class="form-group col-md-5 col-10 offset-md-0 offset-1 text-center">
+			<label for="blood_type">
+				Tipo de sangre:
+			</label>
+			<select class="form-control rounded-pill {% if form2.blood_type.errors %}}border-bottom border-danger{% endif %}" name="blood_type" id="blood_type">
+				<option>Seleccione...</option>
+				{% for x in blood_types %}
+				<option value="{{x.id}}" {% if form2.blood_type.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}>{{x.name}}</option>
+				{% endfor %}
+			</select>
+			<div class="help-block with-errors text-danger">{{form2.blood_type.errors}}</div>
+		</div>
+		<div class="form-group col-md-5 offset-md-1 col-10 offset-1 text-center">
+			<label for="new_password">
+	       	 	Password:
+	      	</label>
+	      	<input type="password"  class="form-control rounded-pill" name="new_password" id="new_password" value="">
+	      	<div class="help-block with-errors text-danger">{{form.errors.new_password}}</div>
+		</div>
+		<div class="form-group col-md-5 col-10 offset-md-0 offset-1 text-center">
+			<label for="repeat_password">
+	       	 	Repetir password:
+	      	</label>
+	      	<input type="password" class="form-control rounded-pill" name="repeat_password" id="repeat_password" placeholder="" value="">
+	      	<div class="help-block with-errors text-danger">{{form.errors.repeat_password}}</div>
+		</div>
+		<div class="form-group col-2 offset-5 d-flex align-items-center">
+			<div class="form-check">
+				<input type="checkbox" class="form-check-input" id="show_password">
+				<label class="form-check-label" for="show_password">Mostrar</label>
+			</div>
+		</div>
+		<div class="form-group col-10 offset-1 text-center">
+			<div class="form-check">
+			  <input class="form-check-input" type="checkbox" value="" name="termsRegister">
+			  <label class="form-check-label small">
+				He leído y acepto los <a href="/termsandconditions/" target="_blank" class="text-white"><strong style="color: black;">términos y condiciones</strong></a> y también las <a href="/privacypolicy/" target="_blank" class="text-white"><strong style="color: black;">políticas de privacidad</strong></a> Amarillos de Oro
+			</label>
+			</div>
+		</div>
+	</form>
+
+	<!-- aca se recorren los errores que no estan amarrados a ningun campo en especifico -->
+	{% for err in form.non_field_errors %}
+	<div class="col-10 offset-1">
+		<div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+	</div>
+    {% endfor %}
+    {% for err in form2.non_field_errors %}
+	<div class="col-10 offset-1">
+		<div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+	</div>
+    {% endfor %}
+
+	<div class="row">
+		<div class="col-10 offset-1 text-center font-weight-bold small pb-4">
+			VERIFICA QUE TODA TU INFORMACIÓN ESTE DILIGENCIADA CORRECTAMENTE ANTES DE ENVIAR
+		</div>
+		<div class="col-10 offset-1 text-center">
+			RECIBE UN CÓDIGO A TU CORREO Y PRESÉNTALO CON TU CEDULA EN ALGUNO DE LOS PUNTOS AUTORIZADOS PARA FINALIZAR TU PROCESO DE REGISTRO
+		</div>
+	</div>
+	<div class="row my-3">
+		<div class="col-4 offset-2 col-md-4 offset-md-2">
+			<a href="{% url 'users:login' %}" class="btn border-Csecondary form-control rounded-pill" role="button" aria-pressed="true">Regresar</a>
+		</div>
+		<div class="col-4 col-md-4 ">
+			<button type="submit" form="createform" class="btn bg-Csecondary form-control rounded-pill text-Cprimary">Enviar</button>
+		</div>
+	</div>
+</div>
+<div class="container-fluid bg-Csecondary align-self-end">
+	<div class="row">
+		<div class="col">
+			<div class="row mt-3">
+				<div class="col-2 offset-5">
+					<img src="{% static 'image/ado_iso.png' %}" class="img-fluid">
+				</div>
+			</div>
+			<div class="row text-center">
+				<div class="col-12 text-white">
+					Políticas de privacidad<br>
+					Terminos y condiciones
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col px-0">
+					<img src="{% static 'image/footer.png' %}" class="img-fluid">
+				</div>
+			</div>
+		</div>
+	</div>	
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html class="h-100">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        {% load static %}
+        <title>Amarillos De Oro</title>
+
+        <!-- Bootstrap CSS CDN -->
+        <link rel="stylesheet" href="{% static '/bootstrap/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static '/sweetalert2/sweetalert2.min.css' %}">
+        <link rel="stylesheet" href="{% static '/css/main.css' %}" />
+        
+        <!-- Font Awesome CSS -->
+        <link rel="stylesheet" href="{% static '/fonts/css/font-awesome.css' %}">
+        <link rel="shortcut icon" type="text/css" href="{% static '/image/LOGO_ADO.ico' %}" />
+    </head>
+    <body class="small">
+        {% include "general/nav.html" %}
+        <div class="container-fluid pr-5 pl-5"  style="background-color: #e5e5e5;">
+            {% block menu %}{% endblock%}
+        </div>
+        <div class="container-fluid pr-5 pl-5" style="height: 68%;">
+            {% block container %}{% endblock%}
+        </div>
+        <div class="modal fade" id="GeneralModal" tabindex="-1" role="dialog" aria-labelledby="GeneralModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered {% block modal-large %}{% endblock %}" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">{% block modal_title %}{% endblock%}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {% block modal_body %}{% endblock%}
+                    </div>
+                    <div class="modal-footer">
+                        {% block modal_footer %}{% endblock%}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="GeneralModalImage" tabindex="-1" role="dialog" aria-labelledby="GeneralModalImage" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="" width="100%%" class="img-fluid"></img>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript" src="{% static '/jquery/jquery.min.js' %}"></script>
+        <script type="text/javascript" src="{% static '/jquery/jquery-ui.min.js' %}"></script>
+        <!-- Popper.JS <label class="font-weight-bold text-Csecondary h4">Ofertas que no puedes perderte</label>-->    
+        <!-- Bootstrap JS  con popper.js-->
+        <script type="text/javascript" src="{% static '/bootstrap/bootstrap.bundle.min.js' %}"></script>
+        <script type="text/javascript" src="{% static '/sweetalert2/sweetalert2.min.js' %}"></script>
+        <script type="text/javascript" src="{% static '/apps/general/general.js' %}"></script>
+        <!--Funcionalidades personalizadas generales-->
+        {% block script %}{% endblock %}
+    </body>
+</html>

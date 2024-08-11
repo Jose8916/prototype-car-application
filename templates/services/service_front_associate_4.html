@@ -1,0 +1,180 @@
+{% extends 'general/base_front.html' %}
+{% load humanize %}
+{% load static %}
+{% block header_color %} bg-Cprimary {% endblock%}
+{% block footer_color %} bg-Csecondary {% endblock%}
+{% block script %} 
+<script type="text/javascript" src="{% static 'apps/services/service_front_associate_3.js' %}"></script>
+{% endblock%}
+{% block container %}
+<div class="row my-2 text-center">
+	<div class="col">
+		Valor a cancelar
+	</div>
+</div>
+<div class="row">
+	<div class="col-6 offset-3 col-md-2 offset-md-5 px-1">
+		<div class="bg-white h1 p-2 text-center rounded-lg">
+			${{total}}
+		</div>
+	</div>
+</div>
+<div class="row my-2">
+    <div class="col-8 offset-2 col-md-4 offset-md-4 bg-white rounded-lg">
+        <div class="row m-0 my-2 font-weight-bold">
+            <div class="col-6">
+                <div class="row">
+                    Factura:
+                </div>
+                <div class="row">
+                    Hora inicilización:
+                </div>
+                <div class="row">
+                    Hora Finalización:
+                </div>
+                <div class="row">
+                    Ciudad:
+                </div>
+                <div class="row">
+                    Membresia:
+                </div>
+                <div class="row">
+                    Categoria:
+                </div>
+                <div class="row">
+                    Nombre:
+                </div>
+                <div class="row">
+                    Destino:
+                </div>
+                <div class="row">
+                    Valor del viaje:
+                </div>
+                {% if initial_affectation < 0 %}
+                <div class="row">
+                    Afectación del viaje:
+                </div>
+                {% endif %}
+                {% if service.promotion_category < 0 %}
+                <div class="row">
+                    Promoción x categoria:
+                </div>
+                {% endif %}                
+                {% if discount_increase_policies > 0 %}
+                <div class="row">
+                    Aumento hora pico:
+                </div>
+                {% endif %}
+                {% if discount_increase_policies < 0 %}
+                <div class="row">
+                    Beneficio hora valle:
+                </div>
+                {% endif %}
+                {% for x in service_collections %}
+                <div class="row">
+                    {{x.collection.name}}:
+                </div>
+                {% endfor %}
+                <div class="row">
+                    Metodo de pago:
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row text-truncate">
+                    {{service.id}}
+                </div>
+                <div class="row text-truncate">
+                    {{service.time_start|date:"d/m/Y H:i"}}
+                </div>
+                <div class="row text-truncate">
+                    {{service.time_stop|date:"d/m/Y H:i"}}
+                </div>
+                <div class="row text-truncate">
+                    {{service.location.city.name}}
+                </div>
+                <div class="row text-truncate">
+                    {{service.user_receiving.user.groups.all.0.name}}
+                </div>
+                <div class="row text-truncate">
+                    {{service.user_receiving.category.name}}
+                </div>
+                <div class="row text-truncate">
+                    {{service.user_receiving.user.first_name}} {{service.user_receiving.user.last_name}}
+                </div>
+                <div class="row text-truncate">
+                    {{service.location.address}}
+                </div>
+                <div class="row text-truncate">
+                    ${{service.price}}
+                </div>
+                {% if initial_affectation < 0 %}
+                <div class="row text-truncate">
+                    ${{initial_affectation}}(%{{initial_affectation_percent}})
+                </div>
+                {% endif %}
+                {% if service.promotion_category < 0 %}
+                <div class="row text-truncate">
+                    ${{service.promotion_category}}(%{{service.promotion_category_percent}})
+                </div>
+                {% endif %}
+                {% if discount_increase_policies > 0 or discount_increase_policies < 0 %}
+                <div class="row text-truncate">
+                    ${{discount_increase_policies}}(%{{discount_increase_policies_percent}})
+                </div>
+                {% endif %}
+                {% for x in service_collections %}
+                <div class="row text-truncate">
+                    ${{x.price}}
+                </div>
+                {% endfor %}
+                <div class="row text-truncate">
+                    {{service.payment_method.name}}
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+<div class="row mt-2">
+    <div class="col-4 offset-4 col-md-2 offset-md-5">
+        <img src="{% static 'image/asociado.png' %}" class="img-fluid">
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-8 offset-2 font-weight-bold text-center">
+        Los descuentos o aumentos sugeridos se 
+        presentan como estrategias de fidelización y 
+        se aplican por los conductores asociados de 
+        Amarillos de oro
+    </div>
+</div>
+<div class="row mt-5">
+    <div class="col-8 offset-2 h5 font-weight-bold text-center">
+        Gracias por viajar con
+        Amarillos de Oro 
+    </div>
+</div>
+<div class="row mt-4">
+	<div class="col-6 offset-3 col-md-2 offset-md-5">
+		<div class="form-group text-center">
+			<button type="button" class="btn bg-Csecondary text-white form-control rounded-pill" data-toggle="modal" data-target="#modal_service_front_associate_4">Terminado</button>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="modal_service_front_associate_4" tabindex="-1" role="dialog" aria-labelledby="modal_logout_nav" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">¿Desea guardar la información de la facturación del servicio?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form  method="POST" class="modal-footer">
+                {% csrf_token %}
+                <button type="button" class="btn btn-sm mt-1 bg-Csecondary btn-block text-white" data-dismiss="modal">Cancelar</button>
+                <button type="submit" name="action" value="update" class="btn btn-sm btn-block bg-Cprimary text-Csecondary">Aceptar</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock%}

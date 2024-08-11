@@ -1,0 +1,142 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/general_menu.html" %}{% endblock%}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'apps/users/operational_users.js' %}"></script>
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+    window.location.replace("/operational_users");
+});
+</script>
+{% endblock %}
+{% block container %}
+<form method="GET">
+    <div class="form-row">
+        <div class="form-group col-4 text-left">
+            <label for="date_birth">
+                Código usuario:
+            </label>
+            <input type="text"  class="form-control" name="code" id="code" placeholder="xxxxxxxxxx" value="{{request.GET.code}}">    
+        </div>
+        <div class=" form-group col-2 align-self-end">
+            <button type="submit" class="btn btn-block btn-success">Buscar</button>
+        </div>
+    </div>
+</form>
+{% if extended_user %}
+<div class="row m-2">
+    <div class="col-6 card">
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Nombre:</span> {{extended_user.user.get_full_name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Correo:</span> {{extended_user.user.email}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Documento:</span> {{extended_user.document_type.name}} {{extended_user.document_number}} 
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">No de celular:</span> {{extended_user.cell_phone}} 
+        </div>
+    </div>
+    <div class="col-6 card">
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Membresia:</span> {{extended_user.user.groups.all.0.name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Categoria:</span> {{extended_user.category.name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Ciudad:</span> {{extended_user.city.name}}
+        </div>
+    </div>
+</div>
+<form  method="POST" class="form-row form-signin m-2" id="createform" enctype="multipart/form-data">
+    {% csrf_token %}
+	<div class="form-group col-6 text-center">
+		<label>{{form.name.label}}</label>
+    	{{form.name}}
+    	<div class="help-block with-errors text-danger" required>{{form.name.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>{{form.number_mercantil.label}}</label>
+    	{{form.number_mercantil}}
+    	<div class="help-block with-errors text-danger" required>{{form.number_mercantil.errors}}</div>
+	</div>
+	<div class="form-group col-4 text-center">
+		<label>{{form.photo_local_1.label}}</label>
+    	{{form.photo_local_1}}
+    	<div class="help-block with-errors text-danger" required>{{form.photo_local_1.errors}}</div>
+	</div>
+	<div class="form-group col-4 text-center">
+		<label>{{form.photo_local_2.label}}</label>
+    	{{form.photo_local_2}}
+    	<div class="help-block with-errors text-danger" required>{{form.photo_local_2.errors}}</div>
+	</div>
+	<div class="form-group col-4 text-center">
+		<label>{{form.photo_local_3.label}}</label>
+    	{{form.photo_local_3}}
+    	<div class="help-block with-errors text-danger" required>{{form.photo_local_3.errors}}</div>
+	</div>
+	<div class="form-group col-12 text-center">
+		<label>{{form.description.label}}</label>
+    	{{form.description}}
+    	<div class="help-block with-errors text-danger" required>{{form.description.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>{{form.category.label}}</label>
+    	{{form.category}}
+    	<div class="help-block with-errors text-danger" required>{{form.category.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>{{form.cell_phone.label}}</label>
+    	{{form.cell_phone}}
+    	<div class="help-block with-errors text-danger" required>{{form.cell_phone.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>{{form.city.label}}</label>
+    	{{form.city}}
+    	<div class="help-block with-errors text-danger" required>{{form.city.errors}}</div>
+	</div>
+	<div class="form-group col-6 text-center">
+		<label>{{form.address.label}}</label>
+    	{{form.address}}
+    	<div class="help-block with-errors text-danger" required>{{form.address.errors}}</div>
+	</div>
+    <div class="col-4 offset-4">
+        <button type="submit" class="btn btn-block btn-success">Guardar</button>
+    </div>
+    {% for err in form.non_field_errors %}
+    <div class="col-10 offset-1">
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+    </div>
+    {% endfor %}
+</form>
+{% elif error %}
+<div class="row m-2">
+    <div class="col font-weight-bold h3">
+        {{error}}
+    </div>
+</div>
+{% elif success %}
+    <div class="col font-weight-bold h3">
+        {{success}}
+    </div>
+{% elif messages %}
+    <div class="col font-weight-bold h3 text-success">
+        {% for message in messages %} 
+            {{message}}<br>
+        {% endfor %}
+    </div>
+{% else %}
+<div class="row m-2">
+    <div class="col font-weight-bold h3">
+        Realice la busqueda para realizar la creacion del aliado
+    </div>
+</div>
+{% endif %}
+{% endblock %}

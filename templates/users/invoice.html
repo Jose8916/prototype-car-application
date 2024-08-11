@@ -1,0 +1,183 @@
+{% extends 'general/base_front.html' %}
+{% load humanize %}
+{% load static %}
+{% block header_color %} bg-Cprimary {% endblock%}
+{% block header %}
+{% if request.session.user_activate  == 'activate_card' %}
+  {% include "general/nav_front.html" with hide_locations="true" hide_pqrs="true" hide_history="true" hide_subscription="true" hide_service="true" hide_service_associate="true" %}
+{% elif request.session.user_activate  == 'subscription' %}
+  {% include "general/nav_front.html" with hide_locations="true" hide_pqrs="true" hide_history="true" hide_card="true" hide_service="true" hide_service_associate="true" %}
+{% else %}
+ {% include "general/nav_front.html" with hide_subscription="true" hide_card="true" %}
+{% endif %}
+{% endblock%}
+{% block container %}
+{% if error %}
+<div class="row m-2">
+    <div class="col font-weight-bold h3">
+        {{error}}
+    </div>
+</div>
+{% else %}
+<div class="row pb-5 d-flex justify-content-center">
+    <div class="col-12 col-md-8 ">
+        <div class="mt-5">
+            <div class="card border-success mt-5">
+                <div class="col-12 col-md-10 offset-md-1 card-body bg-warning rounded-bottom">
+
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center col-md-4 d-flex justify-content-md-start">
+                            <div class="text-white mt-3">
+                                <a class="h6 font-weight-bold">Amarillos</a>
+                            </div>  
+                        </div>
+                        <div class="col-12 d-flex justify-content-center col-md-8 d-flex justify-content-md-end">
+                            <div class="text-white mt-3">
+                                <a class="h6 font-weight-bold">NIT xxx.xxx.xxx.xxx</a>
+                            </div>  
+                        </div>      
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-center col-md-4 d-flex justify-content-md-start">
+                            <div class="text-white mt-3">
+                                <a class="h6 font-weight-bold">Tansacción</a>
+                            </div>  
+                        </div>
+                        <div class="col-12 d-flex justify-content-center col-md-8 d-flex justify-content-md-end">
+                            <div class="text-white mt-3">
+                                <a class="h6 font-weight-bold">#{{invoice.id_transaction}}</a>
+                            </div>  
+                        </div>      
+                    </div> 
+                </div>
+                <div class="col-12 col-md-10 offset-md-1 card-body">
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card border-0 mb-3 shadow w-100">
+                                <div class="row">
+                                    <div class="col-12 col-md-8">
+                                        <div class="card-body">
+                                            <div class="h7 card-title text-Cprimary font-weight-bold pt-1">
+                                                Orden De Compra A Nombre De:
+                                            </div>
+                                            <div class="h7 pb-1">
+                                                {{invoice.user.user.get_full_name}} 
+                                            </div>
+                                            <div class="h7 pb-1">
+                                                Telefono: {{invoice.user.cell_phone}}
+                                            </div>
+                                            <div class="h7 pb-1">
+                                                Email: {{invoice.user.user.email}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>      
+                            </div>
+                        </div>  
+                    </div>
+                </div>  
+                <div class="col-12 col-md-10 offset-md-1 card-body">
+                    <div class="row ml-2">
+                        <div class="col-4 col-md-3">
+                            <div class="h5 text-Cgraylight font-weight-bold">
+                                Estado
+                            </div>
+                        </div>
+                        <div class="col-8 col-md-9">
+                            <i class="fa {% if invoice.state_id == 2 %}text-success fa-check-circle {% elif invoice.state_id == 3%}fa-exclamation-circle  text-warning{% else %}fa-times-circle text-danger{% endif %} fa-lg">
+                                <a class="h5 ml-1 text-dark font-weight-bold">Transacción {{invoice.state.name}}</a>
+                            </i>
+                        </div>
+                    </div>
+                    <div class="row ml-2">
+                        <div class="col-6 col-md-4 print-purchase">
+                            <i class="fa fa-print fa-lg js-print pointer-C text-Cgraylight">
+                                Imprimir Guia
+                            </i>
+                        </div>
+                    </div>
+                    <hr class="font-weight-bold w-100"/>
+                    <div class="row ml-2">
+                        <div class="col-4">
+                            <div class="h6 text-Csecondary font-weight-bold">
+                                <a>Resumen de la compra</a>
+                            </div>
+                        </div>
+                        <div class="col-8">
+                            <div class="row m-0 d-flex justify-content-end">
+                                {{card_subscription.subscription.type_subscription.name}}
+                            </div>
+                            <!-- <div class="row m-0 d-flex justify-content-end">
+                                {{card_subscription.subscription.description}} 
+                            </div> -->
+                        </div>
+                    </div>
+                    <hr class=" font-weight-bold w-100"/>
+                    <div class="row mt-3">
+                        <div class="col-4 offset-6 px-1 px-md-2">
+                            <div class="">
+                                Total Compra
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div class="row m-0 text-black font-weight-bold h6 d-flex justify-content-end">
+                                ${{invoice.total_price|floatformat|intcomma}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card border-0 mb-3 shadow w-100">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <div class="card-body">
+                                            <div class="h7 card-title text-Csecondary font-weight-bold pt-1">Metodo de pago
+                                            </div>
+                                            <div class="h8 pb-1">
+                                                {% if   invoice.payment_method == 'PSE' %}
+                                                    <p>PSE</p>
+                                                {% elif  invoice.payment_method == 'NEQUI' %}
+                                                     <p>NEQUI {{orders.0.invoice.payment_brand}}</p>
+                                                {% elif  invoice.payment_method == 'CARD' %}
+                                                     <p>TARJETA DE CREDITO</p>
+                                                {% elif  invoice.payment_method == 'BANCOLOMBIA_TRANSFER' %}
+                                                     <p>TRANSFERENCIA BANCOLOMBIA</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="h8 text-Cprimary">Fecha de pago: {{invoice.create_date|date:"SHORT_DATETIME_FORMAT"}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-end align-items-center">
+                                        <div class="row m-0 ml-2">
+                                            <div class="col-12">
+                                                <div class="pt-2">
+                                                     {% if   invoice.payment_method == 'PSE' %}
+                                                         <img src="{% static '/image/payment_method/pse.png' %}" class="img-fluid">
+                                                     {% elif  invoice.payment_method == 'NEQUI' %}
+                                                         <img src="{% static '/image/payment_method/nequi.png' %}" class="img-fluid">
+                                                     {% elif  invoice.payment_method == 'CARD' %}
+                                                         <img src="{% static '/image/payment_method/credit-card.png' %}" class="img-fluid" alt="Blank Credit Card Pic @transparentpng.com"> 
+                                                     {% elif  invoice.payment_method == 'BANCOLOMBIA_TRANSFER' %}
+                                                         <img src="{% static '/image/payment_method/bancolombia-transfer.png' %}" class="img-fluid">
+                                                    {% elif  invoice.payment_method == 'CUPON' %}
+                                                        Cupón
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>      
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="row mx-0 h6 text-black-50">                   
+                            Si deseas solicitar tu factura, escríbenos a <span class="text-dark font-weigth-bold pl-1"> soporte@amarillos.co</span>
+                    </div>              
+                </div>  
+            </div>      
+        </div>    
+    </div>
+</div>
+{% endif %}
+{% endblock %}

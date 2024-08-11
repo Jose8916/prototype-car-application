@@ -1,0 +1,40 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/guest_menu.html" %}{% endblock%}
+{% load static %}
+{% block script %}
+{% endblock %}
+{% block container %}
+{% if messages %}
+	<div class="alert alert-success alert-dismissible fade show text-left" role="alert">
+		<ul>
+			{% for message in messages %} 
+			<li><strong>{{message}}</strong></li>
+			{% endfor %}
+		</ul>
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	  		<span aria-hidden="true">&times;</span>
+		</button>
+  	</div>
+{% endif %}
+<form id="form" class="row mt-2" method="POST">
+	{% csrf_token %}
+	<div class="col-6">
+		{{ form.invitation_code.label }}
+        <div class="form-group">
+            {{ form.invitation_code }}
+        </div>
+		<div class="help-block with-errors text-danger" required>{{form.invitation_code.errors}}</div>
+    </div>
+	<div class="col-6">
+		{{ form.amount.label }}
+        <div class="form-group">
+            {{ form.amount }}
+        </div>
+		<div class="help-block with-errors text-danger" required>{{form.amount.errors}}</div>
+    </div>
+	<div class="col-12">
+		<button type="submit" form="form" name="action" value="create" class="btn btn-sm btn-block btn-primary">Realizar recarga</button>
+    </div>
+</form>
+{% endblock %}
+{% block modal_title %}Realizar recarga{% endblock%}

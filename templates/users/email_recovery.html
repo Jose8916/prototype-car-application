@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html class="h-100">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		{% load static %}
+		<title>Amarillos de oro</title>
+
+		<link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+	</head>
+	<body class="">
+		<h1>Cordial saludo {{user.first_name}}</h1>
+		<p>Enviamos este mensaje para restablecer su contraseña. Haga click en el siguiente enlace:</p>
+		<p><a href="{{domain}}{% url 'users:password_reset' uidb64=uid token=token %}">LINK</a></p>
+	</body>
+</html>

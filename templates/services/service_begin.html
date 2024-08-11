@@ -1,0 +1,197 @@
+{% extends "general/base.html" %}
+{% block menu %}{% include "general/general_menu.html" %}{% endblock%}
+{% block container %}
+<div class="row mt-4">
+	<div class="col-6 offset-3">
+		<div class="card tab-content">
+		  <div class="card-header">
+		    Servicio
+		  </div>
+		  <div class="card-body tab-pane fade show active" id="service_step1" role="tabpanel">
+		    <div class="form-group row">
+		        <label for="discount" class="col-3 col-form-label text-right">
+		          CODIGO:
+		        </label>
+		        <div class="col-9">
+		          <input type="text"  class="form-control" maxlength="6" name="code" id="code" style=" text-transform: uppercase;">
+		        </div>
+			</div>
+			<div class="row mt-2">
+				<div class="col-6 offset-3">
+					<button type="submit" id="service_button1" form="createform" name="action" class="btn btn-sm btn-block btn-primary" >Iniciar servicio</button>
+				</div>
+			</div>
+		  </div>
+		  <div class="card-body tab-pane fade" id="service_step2" role="tabpanel">
+		  	<div class="row mt-2">
+				<div class="col-6 offset-3">
+					<button type="submit" id="service_button2" form="createform" name="action" class="btn btn-sm btn-block btn-primary" >Finalizar servicio</button>
+				</div>
+			</div>
+		  </div>
+		  <div class="card-body tab-pane fade" id="service_step3" role="tabpanel">
+		  	<div class="row mt-1 text-left">
+		  		<div class="col-4 offset-2">Hora inicial:</div>
+		  		<div class="col-4">18:25</div>
+		  	</div>
+		  	<div class="row mt-1 text-left">
+		  		<div class="col-4 offset-2">Hora final:</div>
+		  		<div class="col-4">19:38</div>
+		  	</div>
+		  	<div class="form-group row mt-1">
+		        <label for="discount" class="col-3 offset-2 col-form-label text-left">
+		          Unidades:
+		        </label>
+		        <div class="col-5 offset-1">
+		          <input type="number"  min="28" max="500" class="form-control" value="28" name="code" id="code">
+		        </div>
+			</div>
+		    <div class="row mt-1">
+		    	<div class="col-6 offset-2 d-flex justify-content-start align-items-center">
+		    		<input class="form-check-input" type="checkbox" value="" name="termsRegister" required="">
+		    		<label class="form-check-label">
+		    		  Arranque o banderazo
+		    		</label>
+		    	</div>
+		    	<div class="col-3">
+		          <input type="number"  class="form-control" min="1" max="100"  name="quantity" value="1">
+		        </div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-8 offset-2 d-flex justify-content-start">
+	  			  <input class="form-check-input" type="checkbox" value="" name="termsRegister" required="">
+	  			  <label class="form-check-label">
+	  			    Recargo al y del aeropuerto o puente aéreo
+	  			  </label>
+	  			</div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-8 offset-2 d-flex justify-content-start align-items-center">
+	  			  <input class="form-check-input" type="checkbox" value="" name="termsRegister" required="">
+	  			  <label class="form-check-label">
+	  			    Recargo nocturno (20:00 a 5:00), domingo o festivo
+	  			  </label>
+	  			</div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-8 offset-2 d-flex justify-content-start">
+	  			  <input class="form-check-input" type="checkbox" value="" name="termsRegister" required="">
+	  			  <label class="form-check-label">
+	  			    Servicio puerta a puerta
+	  			  </label>
+	  			</div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-8 offset-2 d-flex justify-content-start">
+	  			  <input class="form-check-input" type="checkbox" value="" name="termsRegister" required="">
+	  			  <label class="form-check-label">
+	  			    Recargo terminal terrestre
+	  			  </label>
+	  			</div>
+  			</div>
+			<div class="row mt-2">
+				<div class="col-6 offset-3">
+					<button type="submit" id="service_button3" form="createform" name="action" class="btn btn-sm btn-block btn-primary" >Calcular precio</button>
+				</div>
+			</div>
+		  </div>
+		  <div class="card-body tab-pane fade" id="service_step4" role="tabpanel">
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Ciudad:</div>
+		  		<div class="col-4">Bogotá</div>
+		  	</div>
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Fecha:</div>
+		  		<div class="col-4">2022-08-17</div>
+		  	</div>
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Afiliado:</div>
+		  		<div class="col-4">Pedro Andres Balcazar Peñaloza</div>
+		  	</div>
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Categoria:</div>
+		  		<div class="col-4">Emprendedor</div>
+		  	</div>
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Unidades:</div>
+		  		<div class="col-4">147</div>
+		  	</div>
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Hora de contratación:</div>
+		  		<div class="col-4">18:25</div>
+		  	</div>
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Hora de finalización:</div>
+		  		<div class="col-4">19:38</div>
+		  	</div>
+		  	<div class="row mt-1">
+		  		<div class="col-4 font-weight-bold">Tiempo de viaje:</div>
+		  		<div class="col-4">1:13</div>
+		  	</div>
+		  	<div class="row mt-1">
+		    	<div class="col-4 font-weight-bold">
+		    		Arranque o banderazo
+		    	</div>
+		    	<div class="col-4">
+		          $4.800
+		        </div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-4 font-weight-bold">
+	  			    Recargo al y del aeropuerto o puente aéreo
+	  			</div>
+	  			<div class="col-4">
+		          $4.200
+		        </div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-4 font-weight-bold">
+	  			    Recargo nocturno (20:00 a 5:00), domingo o festivo
+	  			</div>
+	  			<div class="col-4">
+		          $2.000
+		        </div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-4 font-weight-bold">
+	  			    Servicio puerta a puerta
+	  			</div>
+	  			<div class="col-4">
+		          $800
+		        </div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-4 font-weight-bold">
+	  			    Recargo terminal terrestre
+	  			</div>
+	  			<div class="col-4">
+		          $600
+		        </div>
+  			</div>
+  			<div class="row mt-1">
+  				<div class="col-4 font-weight-bold">
+	  			    Tarifa basica:
+	  			</div>
+	  			<div class="col-4">
+		          $12.500
+		        </div>
+  			</div>
+		  </div>
+		</div>
+	</div>
+</div>
+{% endblock%}
+
+{% block script %}
+<script type="text/javascript">
+	$("#service_button1").on("click", function(){
+		$("#service_step2").addClass("show active").siblings().removeClass("show active");
+	});
+	$("#service_button2").on("click", function(){
+		$("#service_step3").addClass("show active").siblings().removeClass("show active");
+	});
+	$("#service_button3").on("click", function(){
+		$("#service_step4").addClass("show active").siblings().removeClass("show active");
+	});
+</script>
+{% endblock %}

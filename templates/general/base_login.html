@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html class="h-100">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		{% load static %}
+		<title>Amarillos de oro</title>
+
+		<link rel="stylesheet" href="{% static 'bootstrap/bootstrap.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+	</head>
+	<body class="h-100 d-flex align-items-start flex-column bg-Cprimary">
+		{% block container %}
+
+		{% endblock%}
+		<script type="text/javascript" src="{% static 'jquery/jquery.min.js' %}"></script>
+		<script type="text/javascript" src="{% static 'bootstrap/bootstrap.bundle.min.js' %}"></script>
+		{% block script %}
+
+		{% endblock%}
+	</body>
+</html>

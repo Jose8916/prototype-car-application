@@ -1,0 +1,27 @@
+{% extends "general/base_login.html" %}
+{% load static %}
+{% block container %}
+<img src="{% static "image/LOGO_ADO.webp" %}" class="img-fluid rounded mx-auto d-block pb-4" style="max-width: 60%;">
+<form method="POST" action="{% url "users:login" %}" class="form-signin">
+  {% csrf_token %}
+  <input type="text" placeholder="Username" class="form-control" name="username" value="{% if form.errors %}{{form.username.value}}{% endif %}" />
+  <input type="password" placeholder="Password" class="form-control mt-2" name="password" />
+  <button type="submit" class="btn btn-lg btn-primary btn-block mt-2">Ingresar</button>
+</form>
+{% if form.errors %}
+<div class="alert alert-danger alert-dismissible fade show">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Error!</strong>{{form.errors}}
+</div>
+{% endif %}
+<div class="">
+  <a href="{% url "users:registration" %}">Registrate</a>
+  <br>
+  <a href="#" data-toggle="modal" data-target="#exampleModal">¿Olvidaste tu contraseña?</a>
+</div>
+{% if message %}
+<div class="alert alert-info" role="alert">
+  {{message}}
+</div>
+{% endif %}
+{% endblock %}

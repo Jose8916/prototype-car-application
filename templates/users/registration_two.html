@@ -1,0 +1,203 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/general_menu.html" %}{% endblock%}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'apps/users/operational_users.js' %}"></script>
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+    window.location.replace("/operational_users");
+});
+</script>
+{% endblock %}
+{% block container %}
+<form method="GET">
+    <div class="form-row">
+        <div class="form-group col-4 text-left">
+            <label for="document">
+                Cedula:
+            </label>
+            <input type="text"  class="form-control" name="document" id="document" placeholder="xxxxxxxxxx" value="{{request.GET.document}}">
+        </div>
+        <div class="form-group col-4 text-left">
+            <label for="date_birth">
+                Código:
+            </label>
+            <input type="text"  class="form-control" name="code" id="code" placeholder="xxxxxxxxxx" value="{{request.GET.code}}">    
+        </div>
+        <div class=" form-group col-2 align-self-end">
+            <button type="submit" class="btn btn-block btn-success">Buscar</button>
+        </div>
+    </div>
+</form>
+{% if extended_user %}
+<div class="row m-2">
+    <div class="col-4 card">
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Nombre:</span> {{extended_user.user.get_full_name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Correo:</span> {{extended_user.user.email}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Documento:</span> {{extended_user.document_type.name}} {{extended_user.document_number}} 
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">No de celular:</span> {{extended_user.cell_phone}} 
+        </div>
+    </div>
+    <div class="col-4 card">
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Membresia:</span> {{extended_user.user.groups.all.0.name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Categoria:</span> {{extended_user.category.name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Ciudad:</span> {{extended_user.city.name}}
+        </div>
+    </div>
+</div>
+<form  method="POST" class="form-row form-signin m-2" id="createform" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group col-4 text-center">
+        <label for="photo">
+            Foto:
+        </label>
+        <input type="file"  accept="image/*" class="form-control {% if form.photo.errors %}}border-bottom border-danger{% endif %}" name="photo" id="photo">
+        <div class="help-block with-errors text-danger">{{form.photo.errors}}</div>
+    </div>
+    <div class="form-group col-4 text-center">
+        <label for="date_birth">
+            Fecha de nacimiento:
+        </label>
+        <input type="date" class="form-control {% if form.date_birth.errors %}}border-bottom border-danger{% endif %}" name="date_birth" id="date_birth" placeholder="" value="{{form.date_birth.value}}">
+        <div class="help-block with-errors text-danger">{{form.date_birth.errors}}</div>
+    </div>
+    {% comment %} <div class="form-group col-2 text-center">
+        <label for="gender">
+            Genero:
+        </label>
+        <select class="form-control {% if form.gender.errors %}}border-bottom border-danger{% endif %}" name="gender" id="gender">
+            <option>Seleccione...</option>
+            {% for x in genders %}
+            <option value="{{x.id}}" {% if form.gender.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}>{{x.name}}</option>
+            {% endfor %}
+        </select>
+        <div class="help-block with-errors text-danger">{{form.gender.errors}}</div>
+    </div>
+    <div class="form-group col-2 text-center">
+        <label for="blood_type">
+            Tipo de sangre:
+        </label>
+        <select class="form-control {% if form.blood_type.errors %}}border-bottom border-danger{% endif %}" name="blood_type" id="blood_type">
+            <option>Seleccione...</option>
+            {% for x in blood_types %}
+            <option value="{{x.id}}" {% if form.blood_type.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %}>{{x.name}}</option>
+            {% endfor %}
+        </select>
+        <div class="help-block with-errors text-danger">{{form.blood_type.errors}}</div>
+    </div> {% endcomment %}
+    <div class="form-group col-4 text-center">
+        <label for="address">
+            Dirección de correspondecia:
+        </label>
+        <textarea class="form-control {% if form.address.errors %}}border-bottom border-danger{% endif %}" name="address" id="address" placeholder="Calle xx #xx-xx sur">{{form.address.value}}</textarea>
+        <div class="help-block with-errors text-danger">{{form.address.errors}}</div>
+    </div>
+    <div class="form-group col-5 text-center">
+        <label for="description_address">
+            Descripción de dirección:
+        </label>
+        <textarea class="form-control {% if form.description_address.errors %}}border-bottom border-danger{% endif %}" name="description_address" id="description_address" placeholder="Localidad/Barrio/Conjunto/Torre/Casa o Apto">{{form.description_address.value}}</textarea>
+        <div class="help-block with-errors text-danger">{{form.description_address.errors}}</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label for="phone_secondary">
+            Telefonó secundario(opcional):
+        </label>
+        <input type="text" class="form-control {% if form.phone_secondary.errors %}}border-bottom border-danger{% endif %}" name="phone_secondary" id="phone_secondary" placeholder="" value="{{form.phone_secondary.value}}">
+        <div class="help-block with-errors text-danger">{{form.phone_secondary.errors}}</div>
+    </div>
+    <div class="form-group col-6 text-center">
+        <label for="favorite_station">
+            Estación de radio favorita(opcional):
+        </label>
+        <input type="text" class="form-control {% if form.favorite_station.errors %}}border-bottom border-danger{% endif %}" name="favorite_station" id="favorite_station" placeholder="" value="{{form.favorite_station.value}}">
+        <div class="help-block with-errors text-danger">{{form.favorite_station.errors}}</div>
+    </div>
+    <div class="form-group col-6 text-center">
+        <label for="favorite_music">
+            Música favorita(opcional):
+        </label>
+        <input type="text" class="form-control {% if form.favorite_music.errors %}}border-bottom border-danger{% endif %}" name="favorite_music" id="favorite_music" placeholder="" value="{{form.favorite_music.value}}">
+        <div class="help-block with-errors text-danger">{{form.favorite_music.errors}}</div>
+    </div>
+    <div class="form-group col-6 text-center">
+        <label for="contact_person_name">
+            Persona de contacto(opcional):
+        </label>
+        <input type="text" class="form-control {% if form.contact_person_name.errors %}}border-bottom border-danger{% endif %}" name="contact_person_name" id="contact_person_name" placeholder="" value="{{form.contact_person_name.value}}">
+        <div class="help-block with-errors text-danger">{{form.contact_person_name.errors}}</div>
+    </div>
+    <div class="form-group col-6 text-center">
+        <label for="contact_person_phone">
+            Número telefónico del contacto(opcional):
+        </label>
+        <input type="text" class="form-control {% if form.contact_person_phone.errors %}}border-bottom border-danger{% endif %}" name="contact_person_phone" id="contact_person_phone" placeholder="" value="{{form.contact_person_phone.value}}">
+        <div class="help-block with-errors text-danger">{{form.contact_person_phone.errors}}</div>
+    </div>
+    <div class="form-group col-10 offset-1 text-center">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="1" name="contact_text_check">
+          <label class="form-check-label small">
+            ¿Para mejorar tu seguridad aceptas recibir un mensaje de texto cada vez que compartas tu codigo de servicio? 
+        </label>
+        </div>
+    </div>
+    <div class="form-group col-10 offset-1 text-center">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="1" name="contact_experience_check">
+          <label class="form-check-label small">
+            Para mejorar la calidad del servicio que contratas podríamos ocasionalmente contactarte para conocer tu experiencia de viaje 
+        </label>
+        </div>
+    </div>
+    <div class="form-group col-10 offset-1 text-center">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="1" name="exchange_data_check">
+          <label class="form-check-label small">
+            Para poder informarte sobre beneficios, promociones y/o descuentos entre nuestros socios y terceros alidaos, aceptas el intercambio de datos
+        </label>
+        </div>
+    </div>
+    <div class="col-4 offset-4">
+        <button type="submit" class="btn btn-block btn-success">Guardar</button>
+    </div>
+    {% for err in form.non_field_errors %}
+    <div class="col-10 offset-1">
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+    </div>
+    {% endfor %}
+</form>
+{% elif error %}
+<div class="row m-2">
+    <div class="col font-weight-bold h3">
+        {{error}}
+    </div>
+</div>
+{% elif success %}
+    <div class="col font-weight-bold h3">
+        {{success}}
+    </div>
+{% else %}
+<div class="row m-2">
+    <div class="col font-weight-bold h3">
+        Realice la busqueda para terminar el registro del usuario
+    </div>
+</div>
+{% endif %}
+{% endblock %}

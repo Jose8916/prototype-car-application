@@ -1,0 +1,1 @@
+Bienvenida {{ username }} gracias por realizar tu inscripción al curso "tal".

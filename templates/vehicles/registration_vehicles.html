@@ -1,0 +1,210 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/general_menu.html" %}{% endblock%}
+{% load static %}
+{% block script %}
+<script type="text/javascript" src="{% static 'apps/users/operational_users.js' %}"></script>
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+    window.location.replace("/registration_vehicles?document={{request.GET.document}}&code={{request.GET.code}}");
+});
+</script>
+{% endblock %}
+{% block container %}
+<form method="GET">
+    <div class="form-row">
+        <div class="form-group col-4 text-left">
+            <label for="document">
+                Cedula:
+            </label>
+            <input type="text"  class="form-control" name="document" id="document" placeholder="xxxxxxxxxx" value="{{request.GET.document}}">
+        </div>
+        <div class="form-group col-4 text-left">
+            <label for="date_birth">
+                Código:
+            </label>
+            <input type="text"  class="form-control" name="code" id="code" placeholder="xxxxxxxxxx" value="{{request.GET.code}}">    
+        </div>
+        <div class=" form-group col-2 align-self-end">
+            <button type="submit" class="btn btn-block btn-success">Buscar</button>
+        </div>
+    </div>
+</form>
+{% if extended_user %}
+<div class="row m-2">
+    <div class="col-4 card">
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Nombre:</span> {{extended_user.user.get_full_name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Correo:</span> {{extended_user.user.email}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Documento:</span> {{extended_user.document_type.name}} {{extended_user.document_number}} 
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">No de celular:</span> {{extended_user.cell_phone}} 
+        </div>
+    </div>
+    <div class="col-4 card">
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Membresia:</span> {{extended_user.user.groups.all.0.name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Categoria:</span> {{extended_user.category.name}}
+        </div>
+        <div class="row mx-0">
+            <span class="font-weight-bold mr-1">Ciudad:</span> {{extended_user.city.name}}
+        </div>
+    </div>
+</div>
+<div class="row d-flex justify-content-end">
+    <a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+</div>
+<div class="row table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Foto</th>
+                <th scope="col">Placa</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Linea</th>
+                <th scope="col">Modelo</th>
+                <th scope="col">Tecnomecanica(adjunto)</th>
+                <th scope="col">Tecnomecanica vencimiento</th>
+                <th scope="col">SOAT(adjunto)</th>
+                <th scope="col">SOAT vencimiento</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for x in vehicles %}
+            <tr>
+                <td scope="row">{{x.id}}</td>
+                <td scope="row">{{x.photo}}</td>
+                <td scope="row">{{x.plate}}</td>
+                <td scope="row">{{x.brand}}</td>
+                <td scope="row">{{x.line}}</td>
+                <td scope="row">{{x.model}}</td>
+                <td scope="row">{{x.technomechanical}}</td>
+                <td scope="row">{{x.technomechanical_date}}</td>
+                <td scope="row">{{x.soat}}</td>
+                <td scope="row">{{x.soat_date}}</td>
+                <td scope="row">{{x.state.name}}</td>
+                <td scope="row">
+                    <a class="fa fa-pencil-square-o text-Cprimary ml-2 cursor-pointer" href="{% url 'vehicles:registration_vehicles' x.id %}?document={{request.GET.document}}&code={{request.GET.code}}"></a>
+                </td>
+            </tr>       
+            {% endfor %}
+        </tbody>    
+    </table>
+</div>
+{% elif error %}
+<div class="row m-2">
+    <div class="col font-weight-bold h3">
+        {{error}}
+    </div>
+</div>
+{% elif success %}
+    <div class="col font-weight-bold h3">
+        {{success}}
+    </div>
+{% else %}
+<div class="row m-2">
+    <div class="col font-weight-bold h3">
+        Realice la busqueda para registrar los vehiculos a un Asociado
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+{% block modal_title %}{% if pk %}Editar {% else %}Crear{% endif %} usuario{% endblock%}
+{% block modal-large %}modal-xl{% endblock %}"
+{% block modal_body %}
+<form  method="POST" class="form-row form-signin m-2" id="createform" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group col-3 text-center">
+        <label for="plate">
+            Placa:
+        </label>
+        <input type="text" class="form-control {% if form.plate.errors %}}border-bottom border-danger{% endif %}" name="plate" id="plate" placeholder="" value="{{form.plate.value}}">
+        <div class="help-block with-errors text-danger">{{form.plate.errors}}</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label for="brand">
+            Marca:
+        </label>
+        <input type="text" class="form-control {% if form.brand.errors %}}border-bottom border-danger{% endif %}" name="brand" id="brand" placeholder="" value="{{form.brand.value}}">
+        <div class="help-block with-errors text-danger">{{form.brand.errors}}</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label for="line">
+            Linea:
+        </label>
+        <input type="text" class="form-control {% if form.line.errors %}}border-bottom border-danger{% endif %}" name="line" id="line" placeholder="" value="{{form.line.value}}">
+        <div class="help-block with-errors text-danger">{{form.line.errors}}</div>
+    </div>
+    <div class="form-group col-3 text-center">
+        <label for="model">
+            Modelo:
+        </label>
+        <input type="number" class="form-control {% if form.model.errors %}}border-bottom border-danger{% endif %}" name="model" id="model" placeholder="" value="{{form.model.value}}">
+        <div class="help-block with-errors text-danger">{{form.model.errors}}</div>
+    </div>
+    <div class="form-group col-8 text-center">
+        <label for="technomechanical">
+            Tecnomecanica:
+        </label>
+        <input type="file"  accept="application/pdf" class="form-control {% if form.technomechanical.errors %}}border-bottom border-danger{% endif %}" name="technomechanical" id="technomechanical">
+        <div class="help-block with-errors text-danger">{{form.technomechanical.errors}}</div>
+    </div>
+    <div class="form-group col-4 text-center">
+        <label for="technomechanical_date">
+            Tecnomecanica fecha vencimiento:
+        </label>
+        <input type="date" class="form-control {% if form.technomechanical_date.errors %}}border-bottom border-danger{% endif %}" name="technomechanical_date" id="technomechanical_date" placeholder="" value="{{form.technomechanical_date.value}}">
+        <div class="help-block with-errors text-danger">{{form.technomechanical_date.errors}}</div>
+    </div>
+    <div class="form-group col-8 text-center">
+        <label for="soat">
+            SOAT:
+        </label>
+        <input type="file"  accept="application/pdf" class="form-control {% if form.soat.errors %}}border-bottom border-danger{% endif %}" name="soat" id="soat">
+        <div class="help-block with-errors text-danger">{{form.soat.errors}}</div>
+    </div>
+    <div class="form-group col-4 text-center">
+        <label for="soat_date">
+            SOAT fecha vencimiento:
+        </label>
+        {{form.soat_date.value}}
+        <input type="date" class="form-control {% if form.soat_date.errors %}}border-bottom border-danger{% endif %}" name="soat_date" id="soat_date" placeholder="" value="{{form.soat_date.value}}">
+        <div class="help-block with-errors text-danger">{{form.soat_date.errors}}</div>
+    </div>
+    <div class="form-group col-8 text-center">
+        <label for="photo">
+            Foto del vehiculo:
+        </label>
+        <input type="file"  accept="image/*" class="form-control {% if form.photo.errors %}}border-bottom border-danger{% endif %}" name="photo" id="photo">
+        <div class="help-block with-errors text-danger">{{form.photo.errors}}</div>
+    </div>
+    {% for err in form.non_field_errors %}
+    <div class="col-10 offset-1">
+        <div class="alert alert-danger alert-dismissible fade show">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+              {{err}}
+        </div>
+    </div>
+    {% endfor %}
+</form>
+{% endblock%}
+{% block modal_footer %}
+<div class="col-6">
+    <button type="button" class="btn btn-sm btn-block btn-secondary" data-dismiss="modal">Cerrar</button>
+</div>
+<div class="col-6">
+    <button type="submit" form="createform" class="btn btn-sm btn-block btn-primary">
+        {% if pk %}Editar{% else %}Crear{% endif %}
+    </button>   
+</div>
+{% endblock%}

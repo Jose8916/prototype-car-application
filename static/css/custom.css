@@ -1,0 +1,242 @@
+  /* Bloque generales */
+  :root {
+    --color-primary: rgba(236, 196, 31, 1);
+    --color-secondary: rgba(37, 33, 39, 1);
+  }
+  @font-face{
+    font-family: "Montserrat-Regular";
+    src:url('../../static/fonts/fonts-text/Montserrat-Regular.otf');
+  }
+
+  body{
+    font-family: Montserrat-Regular;
+    color:var(--color-tertiary);
+  }
+  .full-Cimage {
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+   }
+   .pointer-C{
+     cursor: pointer;
+   }
+
+   .collapse-CNav{
+    z-index: 1000;
+    right: 30px;
+    width: 40%;
+   }
+  /* Fin Bloque*/
+  
+  /* Bloque de mediaquerys*/
+  /*xl*/
+  @media (min-width: 1200px){
+    html{
+      font-size: 15px;
+    }
+  }
+  /*lg*/
+  @media (min-width: 992px) and (max-width: 1199px){
+    html{
+      font-size: 15px;
+    }
+  }
+  /*md*/
+  @media (min-width: 768px) and (max-width: 991px){
+    html{
+      font-size: 14px;
+    }
+  }
+  /*sm*/
+  @media(min-width: 576px) and (max-width: 767px){
+    html{
+      font-size: 14px;
+    }
+  }
+  /*xs*/
+  @media (max-width: 575px){
+   html{
+      font-size: 12px;
+    }
+  }
+  /* Fin Bloque*/
+
+  /*Bloque para crear tarjetas dinamicas acopladas a las columnas*/
+  .card-CResponsive {
+    position: relative;
+    width: 100%; /* o valor necesario*/
+  }
+
+  .card-CResponsive>div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  .pt-C35 {
+    padding-top: 35%;
+  }
+  .pt-C40 {
+    padding-top: 40%;
+  }
+  .pt-C45 {
+    padding-top: 45%;
+  }
+  .pt-C50 {
+    padding-top: 50%;
+  }
+  .pt-C60 {
+    padding-top: 60%;
+  }
+  .pt-C65 {
+    padding-top: 65%;
+  }
+  .pt-C70 {
+    padding-top: 70%;
+  }
+  .pt-C75 {
+    padding-top: 75%;
+  }
+  .pt-C80 {
+    padding-top: 80%;
+  }
+  .pt-C85 {
+    padding-top: 85%;
+  }
+  .pt-C90 {
+    padding-top: 90%;
+  }
+  .pt-C95 {
+    padding-top: 95%;
+  }
+  .pt-C100 {
+    padding-top: 100%;
+  }
+  /* Fin Bloque*/
+
+  /* Bloque de alturas */
+  .h-C5{
+    height: 5%;
+  }
+  .h-C10{
+    height: 10%;
+  }
+  .h-C15{
+    height: 15%;
+  }
+  .h-C20{
+    height: 20%;
+  }
+  .h-C30{
+    height: 30%;
+  }
+  .h-C35{
+    height: 35%;
+  }
+  .h-C40{
+    height: 40%;
+  }
+  .h-C45{
+    height: 45%;
+  }
+  .h-C55{
+    height: 55%;
+  }
+  .h-C60{
+    height: 60%;
+  }
+  .h-C65{
+    height: 65%;
+  }
+  .h-C70{
+    height: 70%;
+  }
+  .h-C80{
+    height: 80%;
+  }
+  .h-C85{
+    height: 85%;
+  }
+  .h-C90{
+    height: 90%;
+  }
+  .h-C95{
+    height: 95%;
+  }
+  /* Fin Bloque*/
+
+  /* Bloque de colores */
+  
+  .bg-Cprimary{
+    background: var(--color-primary);
+  }
+  .bg-Csecondary{
+    background: var(--color-secondary);
+  }
+    
+  .text-Cprimary{
+    color: var(--color-primary);
+  }
+  
+  .text-Csecondary{
+    color: var(--color-secondary);
+  }
+
+  .border-Cprimary {
+    border-color: var(--color-primary)!important;
+  }
+
+  .border-Csecondary {
+    border-color: var(--color-secondary)!important;
+  }
+
+/* Fin Bloque*/
+   
+/* Bloque de truncate por paragrafos */
+  .text-Ctruncate-2{
+    -webkit-line-clamp: 2;
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+  .text-Ctruncate-3{
+    -webkit-line-clamp: 3;
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+   }
+  .text-Ctruncate-4{
+    -webkit-line-clamp: 4;
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+  }
+/* Fin Bloque */
+
+/* Bloque de border */
+  .rounded-C4 {
+    border-radius: .4rem!important;
+  }
+  .rounded-C5 {
+    border-radius: .5rem!important;
+  }
+/* Fin Bloque */
+
+/* Bloque tamaños de letra */
+  .h7-C{
+    font-size: 0.7rem;
+  }
+
+  .h8-C{
+    font-size:0.6rem;
+  }
+ /* Fin Bloque */
+
+
+ 

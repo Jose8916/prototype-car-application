@@ -1,0 +1,200 @@
+{% extends 'general/base_front.html' %}
+{% load humanize %}
+{% load static %}
+{% block header_color %} bg-Cprimary {% endblock%}
+{% block footer_color %} bg-Csecondary {% endblock%}
+{% block script %} 
+<script type="text/javascript" src="{% static 'apps/services/service_front_associate_3.js' %}"></script>
+{% endblock%}
+{% block container %}
+<div class="row my-2 text-center">
+	<div class="col">
+		Valor estimado
+	</div>
+</div>
+<div class="row">
+	<div class="col-6 offset-3 col-md-2 offset-md-5 px-1">
+		<div class="bg-white h1 p-2 text-center rounded-lg">
+			<span>$</span> <span id="money_text">{% if form.price.value %}{{form.price.value}}{% else %}------{% endif %}</span>
+		</div>
+		<input type="hidden" name="price" form="form_senvice_end" id="money_verify" value="{% if form.price.value %}{{form.price.value}}{% else %}{% endif %}">
+		<div class="help-block with-errors text-danger">{{form.errors.price}}</div>
+	</div>
+</div>
+<div class="row my-2">
+	<div class="col-6 offset-3 col-md-2 offset-md-5 px-0">
+		<div class="row">
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="1">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">1</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="2">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">2</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="3">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">3</div>
+                </div>
+			</div>
+		</div>
+		<div class="row mt-3">
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="4">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">4</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="5">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">5</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="6">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">6</div>
+                </div>
+			</div>
+		</div>
+		<div class="row mt-3">
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="7">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">7</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="8">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">8</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="9">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">9</div>
+                </div>
+			</div>
+		</div>
+		<div class="row mt-3">
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="0">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">0</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold">-</div>
+                </div>
+			</div>
+			<div class="col-4 px-2">
+				<div class="card-CResponsive pt-C80 bg-Csecondary rounded-C5" data-number="----">
+                    <div class="w-100 h-100 d-flex text-Cprimary align-items-center justify-content-center h1 font-weight-bold px-3"><img src="{% static 'image/delete-left-solid.svg' %}" class="img-fluid"></div>
+                </div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row mt-2">
+	<div class="col-6 offset-3 col-md-2 offset-md-5">
+		<img src="{% static 'image/asociado.png' %}" class="img-fluid">
+	</div>
+</div>
+<form class="row" method="post"  id="form_senvice_end">
+	{% csrf_token %}
+	<div class="col-10 offset-1 col-md-4 offset-md-4 d-flex justify-content-start pb-3">
+		<div class="row mt-1 mx-0">
+			<div class="col-1 px-1 d-flex justify-content-start align-items-center">
+				<input class="" type="checkbox"  id="initial_affectation_bool" name="initial_affectation_bool" {% if form.initial_affectation_bool.value %}checked{% endif %}>
+			</div>
+			<div class="col-3 px-2 py-2">
+				<img src='/media/collections/afectacion.png' class="img-fluid">
+			</div>
+			<div class="col-2 px-1">
+
+			</div>
+		{% for x in collections %}
+			<div class="col-1 px-1 d-flex justify-content-start align-items-center">
+				<input class="js-collection" type="checkbox" value="{{x.id}}" id="{{x.id}}-collection" name="{{x.id}}-collection" {% for cf in cforms %}{% if cf.prefix == x.id|stringformat:"i" %} checked {% endif %}{% endfor %}>
+			</div>
+			<div class="col-3 px-2 py-2">
+				<img src="{{x.image}}" class="img-fluid">
+			</div>
+			<!-- <div class="col-3 {% if not x.dynamic %}d-none{% endif %}">
+		      <input type="number"  class="form-control js-quantity" min="1" max="100"  name="{{x.id}}-quantity" value="{% for cf in cforms %}{% if cf.prefix == x.id|stringformat:'i' %}{{cf.quantity.value}}{% endif %}{% empty %}1{% endfor %}">
+		    </div> -->
+			<div class="col-2 px-1 d-flex justify-content-start align-items-center">
+				<select class="form-control {% if not x.dynamic %}d-none{% endif %} js-quantity" name="{{x.id}}-quantity">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+			</div>
+			
+		    <!-- {% for cf in cforms %}
+		    {% if cf.prefix == x.id|stringformat:"i" %}
+		    <div class="col-6">
+				<div class="help-block with-errors text-danger">{{cf.errors.service}} {{cf.errors.quantity}}</div>
+		    </div>
+		    {% endif %}
+		    {% endfor %} -->
+			{% endfor %}
+		</div>
+		<input type="hidden" id="prefix_service" name="prefix" class="form-control" value="{% for cf in cforms %}{{cf.prefix}}{% if not forloop.last %},{% endif %}{% endfor %}">
+		
+	</div>
+	<div class="col-8 offset-2 col-md-2 offset-md-5">
+		<select class="form-control" id="payment_method" name="payment_method">
+			<option value="">--Metodo de pago--</option>
+			{% for x in payment_methods %}
+			<option value="{{x.id}}" {% if form.payment_method.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% endif %} >{{x.name}}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="help-block with-errors text-danger col-8 offset-2">{{form.payment_method.errors}}</div>
+</form>
+<div class="row mt-4">
+	<div class="col-6 offset-3 col-md-2 offset-md-5">
+		<div class="form-group text-center">
+			<button type="button" class="btn bg-Csecondary text-white form-control rounded-pill" data-toggle="modal" data-target="#modal_service_front_associate_3">Ingresado</button>
+		</div>
+		<div class="form-group text-center">
+			<button type="button" class="btn bg-danger text-white form-control rounded-pill" data-toggle="modal" data-target="#modal_delete_service_front_associate_3">Cancelación de servicio</button>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="modal_service_front_associate_3" tabindex="-1" role="dialog" aria-labelledby="modal_logout_nav" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        {% csrf_token %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">¿Desea guardar la información información registrada?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm mt-1 bg-Csecondary btn-block text-white" data-dismiss="modal">Cancelar</button>
+                <button type="submit" name="action" value="update" form="form_senvice_end" class="btn btn-sm btn-block bg-Cprimary text-Csecondary">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal_delete_service_front_associate_3" tabindex="-1" role="dialog" aria-labelledby="modal_logout_nav" aria-hidden="true">
+    <form  method="POST" class="modal-dialog" role="document">
+        {% csrf_token %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">¿Desea cancelar el servicio?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm mt-1 bg-Csecondary btn-block text-white" data-dismiss="modal">Cancelar</button>
+                <button type="submit" name="action" value="delete" class="btn btn-sm btn-block bg-Cprimary text-Csecondary">Aceptar</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock%}

@@ -1,0 +1,109 @@
+{% load static %}
+<div class="row my-2">
+	<div class="col-2 d-flex align-items-center justify-content-center">
+		<i class="fa fa-times fa-2x text-Csecondary pointer-C" data-toggle="modal" data-target="#modal_logout_nav"></i>
+	</div>
+    
+	<div class="col-2 offset-8 d-flex align-items-center justify-content-center">
+        <i class="fa fa-bars fa-2x text-Csecondary js-dropdown_login pointer-C" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></i>
+	</div>
+</div>
+<div class="collapse position-absolute bg-white border border-Csecondary rounded-C5 collapse-CNav" id="collapseExample">
+    <div class="container-fluid">
+    {% if hide_service_associate != 'true' and request.user.groups.all.0.id == 2 %}   
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'services:service_front_associate' %}">
+                <i class="fa fa-hashtag pr-2"></i>
+                <span>Cod. servicio</span>
+            </a>
+        </div>
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'vehicles:vehicles_front' %}">
+                <i class="fa fa-taxi pr-2"></i>
+                <span>Vehículos</span>
+            </a>
+        </div>
+    {% endif%}
+    {% if hide_service != 'true' %}   
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'services:service_front_affiliate' %}">
+                <i class="fa fa-plus pr-2"></i>
+                <span>ado</span>
+            </a>
+        </div>
+    {% endif%}
+    {% if hide_locations != 'true' %}   
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'regions:locations_front' %}">
+                <i class="fa fa-map-marker pr-2"></i>
+                <span>Destinos</span>
+            </a>
+        </div>
+    {% endif%}
+    {% if hide_pqrs != 'true' %} 
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'services:pqr_front' %}">
+                <i class="fa fa-list-alt pr-2"></i>
+                <span>PQRs</span>
+            </a>
+        </div>
+    {% endif%}
+    {% if hide_history != 'true' %}
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'services:travel_history' %}">
+                <i class="fa fa-hourglass pr-2"></i>
+                <span>Historial de viajes</span>
+            </a>
+        </div>
+    {% endif%}
+    {% if hide_invoice != 'true' %}
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'users:invoices' %}">
+                <i class="fa fa-hourglass pr-2"></i>
+                <span>Factura</span>
+            </a>
+        </div>
+    {% endif%}
+    {% if hide_card != 'true' %}
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'users:activate_cards' %}">
+                <i class="fa fa-hourglass pr-2"></i>
+                <span>Activación</span>
+            </a>
+        </div>
+    {% endif%}
+    {% if hide_subscription != 'true' %}
+        <div class="row mx-0 my-2 pointer-C">
+            <a class="text-secondary font-weight-bold" href="{% url 'users:subscription' %}">
+                <i class="fa fa-hourglass pr-2"></i>
+                <span>Pagar suscripción</span>
+            </a>
+        </div>
+    {% endif%}
+    </div>
+</div>
+<div class="row text-center">
+	<div class="col-4 offset-4 col-md-2 offset-md-5">
+		<img src="{% static 'image/ado_logo_s.png' %}" class="img-fluid">
+	</div>
+</div>
+<div class="modal fade" id="modal_logout_nav" tabindex="-1" role="dialog" aria-labelledby="modal_logout_nav" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cerrar sesión</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <i class="fa fa-sign-out align-middle"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿ Deseas cerrar sesión ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm mt-1 bg-Csecondary btn-block text-white" data-dismiss="modal">Cancelar</button>
+                <a href="{% url 'users:logout' %}" role="button" class="btn btn-sm btn-block bg-Cprimary text-Csecondary">Aceptar</a>
+            </div>
+        </div>
+    </div>
+</div>
+

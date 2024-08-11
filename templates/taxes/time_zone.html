@@ -1,0 +1,118 @@
+{% extends "general/base.html" %}
+{% block menu %}{% include "general/taxe_menu.html" %}{% endblock%}
+{% block container %}
+  <div class="row mx-0 table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Descuento por pregunta %</th>
+          <th scope="col">Beneficio % <br> Uni. 82-106</th>
+          <th scope="col">Hora Inicial</th>
+          <th scope="col">Hora Final</th>
+          <th scope="col">Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x  in lists %}
+        <tr>
+          <th scope="row">{{x.id}}</th>
+          <td>{{x.name}}</td>
+          <td>{{x.description}}</td>
+          <td>{{x.value}}</td>
+          <td>{{x.benefit}}</td>
+          <td>{{x.hour_start}}</td>
+          <td>{{x.hour_end}}</td>
+          <td class="px-2 py-3" scope="col">
+            <a class="fa fa-pencil-square-o cursor-pointer" href="{% url 'taxes:time_zone' x.id %}"></a>
+            {# <a class="fa fa-trash text-danger"></a> #}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
+{% block modal_title %}
+  {% if time %} Editar {% else %}Crear {%endif%}Franja Horaria {{time.name}}
+{% endblock%}
+{% block modal_body %}
+  {% if time %}
+    <form  method="POST" class="form-signin m-2" id="createform">
+      {% csrf_token %}
+      <div class="form-group row">
+        <label for="value" class="col-3 col-form-label text-right">
+          Desc. X pregunta:
+        </label>
+        <div class="col-3">
+          <input type="number" min="0" max="100" class="form-control {% if form.value.errors %}border-bottom border-danger{% endif %}" name="value" id="value" placeholder="Porcentaje" value="{% if form.errors %}{{form.value.value|floatformat:0}}{% else %}{{time.value|floatformat:0}}{% endif %}">
+        </div>
+        {% if form.value.errors %}
+          {{form.value.errors}}
+        {% endif %}
+      </div>
+      <div class="form-group row">
+        <label for="value" class="col-3 col-form-label text-right">
+          Beneficio:
+        </label>
+        <div class="col-3">
+          <input type="number" min="0" max="100" class="form-control {% if form.benefit.errors %}border-bottom border-danger{% endif %}" name="benefit" id="benefit" placeholder="Porcentaje" value="{% if form.errors %}{{form.benefit.value|floatformat:0}}{% else %}{{time.benefit|floatformat:0}}{% endif %}">
+        </div>
+        {% if form.benefit.errors %}
+          {{form.value.errors}}
+        {% endif %}
+      </div>
+    </form>
+    {% else %}
+    <form  method="POST" class="form-signin m-2" id="createform">
+      {% csrf_token %}
+      <div class="form-group">
+        <input type="text" class="form-control {% if form.errors %}}border-bottom border-danger{% endif %}" name="name" id="name" placeholder="Nombre" value="{% if form.errors %}{{form.name.value}}{% endif %}">
+        {% if form.name.errors %}<label for="name">{{form.name.errors}}</label>{% endif %}
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control {% if form.errors %}}border-bottom border-danger{% endif %}" name="description" id="description" placeholder="Descripcion" value="{% if form.errors %}{{form.description.value}}{% endif %}">
+        {% if form.description.errors %}<label for="description">{{form.description.errors}}</label>{% endif %}
+      </div>
+      <div class="form-group">
+        <input type="number" class="form-control {% if form.errors %}}border-bottom border-danger{% endif %}" name="value" id="value" placeholder="Valor" value="{% if form.errors %}{{form.value.value|floatformat:0}}{% endif %}">
+        {% if form.value.errors %}<label for="value">{{form.value.errors}}</label>{% endif %}
+      </div>
+      <div class="form-group">
+        <select class="form-control" id="state" name="state" placeholder="state" >
+          {% for x in states %}
+          <option value="{{x.id}}">{{x.name}}</option>
+          {% endfor %}
+        </select>
+        {#<label for="document_type">Tipo de Documento</label>#}
+      </div>
+      <div class="form-group">
+        <input type="time" class="form-control {% if form.errors %}}border-bottom border-danger{% endif %}" name="hour_start" id="hour_start" placeholder="hora inicial" value="{% if form.errors %}{{form.hour_start}}{% endif %}">
+        {% if form.value.errors %}<label for="value">{{form.value.errors}}</label>{% endif %}
+      </div>
+      <div class="form-group">
+        <input type="time" class="form-control {% if form.errors %}}border-bottom border-danger{% endif %}" name="hour_end" id="hour_end" placeholder="Valor" value="{% if form.errors %}{{form.hour_end}}{% endif %}">
+        {% if form.hour_end.errors %}<label for="hour_end">{{form.hour_end.errors}}</label>{% endif %}
+      </div>
+    </form>
+  {% endif %}
+{% endblock%}
+{% block modal_footer %}
+  <button type="button" class="btn btn-sm mt-1 btn-secondary btn-block" data-dismiss="modal">Cerrar</button>
+  <button type="submit" form="createform" name="action" value="create" class="btn btn-sm btn-block btn-primary">Crear
+  </button>
+{% endblock%}
+{% block script %}
+  {%if form.errors%}
+    <script>
+      $('#GeneralModal').modal('show');
+    </script> 
+  {%endif%}
+  {% if time %}
+    <script>
+      $('#GeneralModal').modal('show');
+    </script> 
+  {% endif %}
+{% endblock %}

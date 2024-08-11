@@ -1,0 +1,203 @@
+{% extends 'general/base.html' %}
+{% block menu %}{% include "general/general_menu.html" %}{% endblock%}
+{% block script %}
+<script>
+$('#GeneralModal').modal('{{modal}}');
+$('#GeneralModal').on('hidden.bs.modal', function (e) {
+	{% if publication %}
+	window.history.back();
+	{% endif %}
+});
+</script>
+{% endblock %}
+{% block container %}
+<div class="row d-flex justify-content-end">
+	<a class="h6 text-success font-weight-bold" href="#" role="button" data-toggle="modal" data-target="#GeneralModal"><i class="fa fa-plus mr-2"></i>Nuevo</a>
+	{# <button type="submit" form="createform" name="action" value="new" class="btn btn-sm btn-block btn-primary"> #}
+		{# {% if city %}Editar {% else %}Crear{% endif %} #}
+</div>
+<div class="row table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th scope="col">Id</th>
+				<th scope="col">Nombres</th>
+				<th scope="col">Apellidos</th>
+				<th scope="col">Email</th>
+				<th scope="col">Codigo de invitación</th>
+				<th scope="col">Tipo de documento</th>
+				<th scope="col">Documento</th>
+				<th scope="col">Celular</th>
+				<th scope="col">Clase de membresia</th>
+				<th scope="col">Categoria</th>
+				<th scope="col">Ciudad</th>
+
+				<th scope="col">Fecha de nacimiento</th>
+				<th scope="col">Foto</th>
+				<th scope="col">Genero</th>
+				<th scope="col">Tipo de sangre</th>
+				<th scope="col">Telefono secundario</th>
+				<th scope="col">Direccion</th>
+				<th scope="col">Descripcion de la direccion</th>
+				<th scope="col">Estacion favorita</th>
+				<th scope="col">Musica favorita</th>
+				<th scope="col">Nombre de contacto</th>
+				<th scope="col">Número de contacto</th>
+				<th scope="col">Estado</th>
+				<th scope="col">Opciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for x in users %}
+			<tr>
+				<td scope="row">{{x.user.id}}</td>
+				<td scope="row">{{x.user.first_name}}</td>
+				<td scope="row">{{x.user.last_name}}</td>
+				<td scope="row">{{x.user.email}}</td>
+				<td scope="row">{{x.code_invitation}}</td>
+				<td scope="row">{{x.document_type.name}}</td>
+				<td scope="row">{{x.document_number}}</td>
+				<td scope="row">{{x.cell_phone}}</td>
+				<td scope="row">{{x.user.groups.all.0}}</td>
+				<td scope="row">{{x.category.name}}</td>
+				<td scope="row">{{x.city.name}}</td>
+
+				<td scope="row">{{x.date_birth}}</td>
+				<td scope="row">{% if x.photo %}<img src="{{x.photo.url}}" class="img-fluid" width="100">{% endif %}</td>
+				<td scope="row">{{x.gender.name}}</td>
+				<td scope="row">{{x.blood_type.name}}</td>
+				<td scope="row">{{x.phone}}</td>
+				<td scope="row">{{x.address}}</td>
+				<td scope="row">{{x.description_address}}</td>
+				<td scope="row">{{x.favorite_station}}</td>
+				<td scope="row">{{x.favorite_music}}</td>
+				<td scope="row">{{x.contact_person_name}}</td>
+				<td scope="row">{{x.contact_person_phone}}</td>
+				<td scope="row">{{x.state.name}}</td>
+				<td scope="row">
+					<a class="fa fa-pencil-square-o text-Cprimary ml-2 cursor-pointer" href="{% url 'users:users' x.user.id %}"></a>
+				</td>
+			</tr>		
+			{% endfor %}
+		</tbody>	
+	</table>
+</div>
+{% endblock %}
+{% block modal_title %}{% if city %}Editar {% else %}Crear{% endif %} Usuario {% endblock%}
+{% block modal-large %}modal-xl{% endblock %}
+{% block modal_body %}
+<form  method="POST" class="form-signin m-2" id="createform" enctype="multipart/form-data">
+	{% csrf_token %}
+	<div class="form-row">
+		<div class="form-group col-4 text-left">
+			<label for="date_birth">
+         	 	Fecha de nacimiento:
+        	</label>
+        	<input type="date"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="date_birth" id="date_birth" placeholder="xxxxxxxxxx" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="date_birth">
+         	 	Foto:
+        	</label>
+        	<input type="file" accept="image/*" class="form-control {% if form.photo.errors %}border-bottom border-danger{% endif %}" name="photo" id="photo" placeholder="Imagen" value="{{form.photo.value}}">	
+		</div>
+		<div class="form-group col-2 text-left">
+			<label for="last_name">
+         	 	Genero:
+        	</label>
+        	<select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="category" name="category">
+	    		<option>-----------</option>
+	    		{% for x in states %}
+	    		<option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == publication.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-2 text-left">
+			<label for="last_name">
+         	 	Tipo de sangre:
+        	</label>
+        	<select class="form-control {% if form.state.errors %}border-bottom border-danger{% endif %}" id="category" name="category">
+	    		<option>-----------</option>
+	    		{% for x in states %}
+	    		<option value="{{x.id}}" {% if form.errors and form.state.value|floatformat:'0' == x.id|floatformat:'0' %} selected {% elif x.id|floatformat:'0' == publication.state.id|floatformat:'0'%}selected{% endif %}>{{x.name}}</option>
+	    		{% endfor %}
+	    	</select>
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-5 text-left">
+			<label for="date_birth">
+         	 	Direccion:
+        	</label>
+        	<input type="text" accept="image/*" class="form-control {% if form.photo.errors %}border-bottom border-danger{% endif %}" name="photo" id="photo" placeholder="Imagen" value="{{form.photo.value}}">	
+		</div>
+		<div class="form-group col-7 text-left">
+			<label for="last_name">
+         	 	Complemento direccion:
+        	</label>
+        	<textarea class="form-control"></textarea>
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-4 text-left">
+			<label for="date_birth">
+         	 	Telefono secundario:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="date_birth" id="date_birth" placeholder="xxxxxxxxxx" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="date_birth">
+         	 	Estacion de musica favorita:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="date_birth" id="date_birth" placeholder="xxxxxxxxxx" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="date_birth">
+         	 	Musica favorita:
+        	</label>
+        	<input type="text" accept="image/*" class="form-control {% if form.photo.errors %}border-bottom border-danger{% endif %}" name="photo" id="photo" placeholder="Imagen" value="{{form.photo.value}}">	
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col-4 text-left">
+			<label for="date_birth">
+         	 	Persona de contacto:
+        	</label>
+        	<input type="text"  class="form-control {% if form.url.errors %}border-bottom border-danger{% endif %}" name="date_birth" id="date_birth" placeholder="xxxxxxxxxx" value="{% if form.errors %}{{form.url.value}}{% else %}{{publication.url}}{% endif %}">
+        	{% if form.url.errors %}
+          		{{form.url.errors}}
+        	{% endif %}
+		</div>
+		<div class="form-group col-4 text-left">
+			<label for="date_birth">
+         	 	Número de contacto:
+        	</label>
+        	<input type="text" accept="image/*" class="form-control {% if form.photo.errors %}border-bottom border-danger{% endif %}" name="photo" id="photo" placeholder="Imagen" value="{{form.photo.value}}">	
+		</div>
+	</div>
+</form>
+{% endblock%}
+{% block modal_footer %}
+<button type="button" class="btn btn-sm mt-1 btn-secondary btn-block" data-dismiss="modal">Cerrar</button>
+<button type="submit" form="createform" name="action" value="create" class="btn btn-sm btn-block btn-primary">
+	{% if city %}Editar {% else %}Crear{% endif %}
+</button>
+{% endblock%}
